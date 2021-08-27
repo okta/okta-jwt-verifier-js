@@ -1,16 +1,15 @@
 {
   "name": "@okta/jwt-verifier",
+  "private": true,
   "version": "2.3.0",
   "description": "Easily validate Okta access tokens",
   "repository": "https://github.com/okta/okta-oidc-js",
   "homepage": "https://github.com/okta/okta-oidc-js/tree/master/packages/jwt-verifier",
   "main": "lib.js",
   "types": "lib.d.ts",
-  "files": [
-    "lib.js",
-    "lib.d.ts"
-  ],
   "scripts": {
+    "build": "node build-scripts/build.js",
+    "banners": "node build-scripts/maintain-banners.js",
     "test": "yarn test:unit && yarn test:integration && yarn lint",
     "test:integration": "../../scripts/tck.sh",
     "test:unit": "JEST_JUNIT_OUTPUT=./reports/junit/results.xml jest --runInBand test/spec",
@@ -45,6 +44,7 @@
     "@typescript-eslint/parser": "^4.18.0",
     "cors": "^2.8.4",
     "cross-env": "^5.1.1",
+    "dotenv": "^10.0.0",
     "eslint": "^7.22.0",
     "eslint-plugin-node": "^11.1.0",
     "express": "^4.15.4",
@@ -52,6 +52,7 @@
     "jest-junit": "^6.4.0",
     "nock": "^9.0.14",
     "node-fetch": "^2.6.0",
+    "shelljs": "^0.8.4",
     "timekeeper": "^1.0.0",
     "tsd": "^0.14.0",
     "typescript": "^4.1.5"
