@@ -13,3 +13,10 @@ test_suites:
     script_name: unit
     criteria: MERGE
     queue_name: small
+  - name: ci
+    script_path: '../okta-jwt-verifier-js/scripts'
+    sort_order: '3'
+    timeout: '60'
+    script_name: ci
+    criteria: MERGE
+    queue_name: small

@@ -12,8 +12,8 @@
     "banners": "node build-scripts/maintain-banners.js",
     "test": "yarn test:unit && yarn test:integration && yarn lint",
     "test:integration": "../../scripts/tck.sh",
-    "test:unit": "JEST_JUNIT_OUTPUT=./reports/junit/results.xml jest --runInBand test/spec",
-    "test:ci": "JEST_JUNIT_OUTPUT=./reports/junit/results.xml jest test/internal-ci",
+    "test:unit": "JEST_JUNIT_OUTPUT=./reports/unit/results.xml jest --runInBand test/spec",
+    "test:ci": "JEST_JUNIT_OUTPUT=./reports/ci/results.xml jest test/internal-ci",
     "lint": "eslint . --ext .js --ext .ts && tsd"
   },
   "keywords": [
