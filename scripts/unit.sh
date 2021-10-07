@@ -5,6 +5,8 @@ source ${OKTA_HOME}/${REPO}/scripts/setup.sh
 export TEST_SUITE_TYPE="junit"
 export TEST_RESULT_FILE_DIR="${REPO}/reports/unit"
 
+export ISSUER=https://foo.org
+
 # Run jest with "ci" flag
 if ! yarn test:unit --ci; then
   echo "unit failed! Exiting..."
