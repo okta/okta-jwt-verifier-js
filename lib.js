@@ -56,7 +56,8 @@ const assertClientId = (clientId) => {
   if (!clientId) {
     throw new ConfigurationValidationError('Your client ID is missing. ' + copyCredentialsMessage);
   } else if (clientId.match(/{clientId}/)) {
-    throw new ConfigurationValidationError('Replace {clientId} with the client ID of your Application. ' + copyCredentialsMessage);
+    throw new ConfigurationValidationError(
+      'Replace {clientId} with the client ID of your Application. ' + copyCredentialsMessage);
   }
 };
 

@@ -1,8 +1,7 @@
-#! /usr/bin/env node
 
-const fs = require('fs')
-const globby = require('globby')
-const path = require('path')
+const fs = require('fs');
+const path = require('path');
+const globby = require('globby');
 
 const bannerSourcePath = path.join(__dirname, 'license-template.txt')
 const files = globby.sync(path.join(__dirname, '..', '{*.{js,ts},test/spec/*.js}'))
