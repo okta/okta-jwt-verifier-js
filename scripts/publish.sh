@@ -1,16 +1,8 @@
 #!/bin/bash -xe
 
-export NVM_DIR="/root/.nvm"
-
-# Install required node version
-setup_service node v12.13.0
-
-# Install yarn
-curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.17.3
-# Link the installed yarn to be default
-ln -sf ~/.yarn/bin/yarn /usr/bin/yarn
-
 source $OKTA_HOME/$REPO/scripts/setup.sh
+
+REGISTRY="${ARTIFACTORY_URL}/api/npm/npm-topic"
 
 export TEST_SUITE_TYPE="build"
 
@@ -27,35 +19,22 @@ else
   TARGET_BRANCH=${BRANCH}
 fi
 
-PACKAGES=(
-  "./packages/configuration-validation"
-  "./packages/jwt-verifier"
-  "./packages/oidc-middleware"
-)
+pushd ./dist
 
-# Override default registry
-REGISTRY="${ARTIFACTORY_URL}/api/npm/npm-topic"
+if ! ci-append-sha; then
+  echo "ci-append-sha failed! Exiting..."
+  exit ${FAILED_SETUP}
+fi
+
+### looks like ci-append-sha is not compatible with `yarn publish`
+### which expects new-version is passed via command line parameter.
+### keep using npm for now
 npm config set @okta:registry ${REGISTRY}
+if ! npm publish --registry ${REGISTRY}; then
+  echo "npm publish failed for $PACKAGE! Exiting..."
+  exit ${PUBLISH_ARTIFACTORY_FAILURE}
+fi
 
-for PACKAGE in "${PACKAGES[@]}"
-do
-  pushd $PACKAGE
+popd
 
-  if ! ci-append-sha; then
-    echo "ci-append-sha failed for $PACKAGE! Exiting..."
-    exit ${FAILED_SETUP}
-  fi
-
-  ### looks like ci-append-sha is not compatible with `yarn publish`
-  ### which expects new-version is passed via command line parameter.
-  ### keep using npm for now
-  if ! npm publish --registry ${REGISTRY}; then
-    echo "npm publish failed for $PACKAGE! Exiting..."
-    exit ${PUBLISH_ARTIFACTORY_FAILURE}
-  fi
-
-  popd
-
-done
-
-exit $SUCCESS
+exit ${SUCCESS}

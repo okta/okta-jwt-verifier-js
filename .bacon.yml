@@ -20,3 +20,10 @@ test_suites:
     script_name: ci
     criteria: MERGE
     queue_name: small
+  - name: publish
+    script_path: '../okta-jwt-verifier-js/scripts'
+    sort_order: '4'
+    timeout: '60'
+    script_name: publish
+    criteria: MERGE
+    queue_name: small
