@@ -8,8 +8,9 @@
   "main": "lib.js",
   "types": "lib.d.ts",
   "scripts": {
-    "build": "node scripts/build.js",
+    "build": "node build-scripts/build.js",
     "banners": "node build-scripts/maintain-banners.js",
+    "prepare": "yarn build",
     "test": "yarn test:unit && yarn test:integration && yarn lint",
     "test:integration": "../../scripts/tck.sh",
     "test:unit": "JEST_JUNIT_OUTPUT=./reports/unit/results.xml jest --runInBand test/spec",

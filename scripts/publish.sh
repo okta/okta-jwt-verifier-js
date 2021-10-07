@@ -19,7 +19,6 @@ else
   TARGET_BRANCH=${BRANCH}
 fi
 
-yarn build
 pushd ./dist
 
 if ! ci-append-sha; then
