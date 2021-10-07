@@ -24,9 +24,12 @@
     ],
     "rules": {
         "max-len": ["error", { "code": 120, "comments": 120 }],
-        "max-classes-per-file": ["error", 2],
+        "max-classes-per-file": ["error", 3],
         "@typescript-eslint/no-var-requires": 0,
         "node/no-unsupported-features/es-syntax": ["error", { "ignores": ["modules"] }],
-        "@typescript-eslint/no-unused-vars": 0
+        "@typescript-eslint/no-unused-vars": 0,
+        "node/no-unpublished-require": ["error", {
+          "allowModules": ["globby", "shelljs", "chalk"]
+      }]
     }
 }
