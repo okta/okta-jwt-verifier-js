@@ -6,3 +6,10 @@ test_suites:
     script_name: lint
     criteria: MERGE
     queue_name: small
+  - name: unit
+    script_path: '../okta-jwt-verifier-js/scripts'
+    sort_order: '2'
+    timeout: '60'
+    script_name: unit
+    criteria: MERGE
+    queue_name: small
