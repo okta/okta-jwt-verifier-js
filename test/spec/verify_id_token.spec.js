@@ -14,7 +14,7 @@ const nock = require('nock');
 const tk = require('timekeeper');
 const constants = require('../constants')
 
-const { getIdToken, createToken, createVerifier, createCustomClaimsVerifier, rsaKeyPair } = require('../util');
+const { createToken, createVerifier, createCustomClaimsVerifier, rsaKeyPair } = require('../util');
 
 // These need to be exported in the environment, from a working Okta org
 const ISSUER = constants.ISSUER;
@@ -28,7 +28,7 @@ const NONCE = 'foo';
 const LONG_TIMEOUT = 60000;
 
 // Used to get an ID token and id token from the AS
-const issuer1IdTokenParams = {
+const issuer1TokenParams = {
   ISSUER,
   CLIENT_ID,
   USERNAME,
@@ -39,152 +39,6 @@ const issuer1IdTokenParams = {
 
 
 describe('Jwt Verifier - Verify ID Token', () => {
-
-  describe('ID token tests with api calls', () => {
-    const expectedClientId = CLIENT_ID;
-    const verifier = createVerifier();
-
-    it('should allow me to verify Okta ID tokens', () => {
-      return getIdToken(issuer1IdTokenParams)
-      .then(idToken => {
-        return verifier.verifyIdToken(idToken, expectedClientId, NONCE);
-      })
-      .then(jwt => {
-        expect(jwt.claims.iss).toBe(ISSUER);
-      });
-    }, LONG_TIMEOUT);
-
-    it('should fail if the signature is invalid', () => {
-      return getIdToken(issuer1IdTokenParams)
-      .then(idToken => verifier.verifyIdToken(idToken, expectedClientId, NONCE))
-      .then(jwt => {
-        // Create an ID token with the same claims and kid, then re-sign it with another RSA private key - this should fail
-        const token = createToken(jwt.claims, { kid: jwt.header.kid });
-        
-        return verifier.verifyIdToken(token, expectedClientId, NONCE)
-        .catch(err => expect(err.message).toBe('Signature verification failed'));
-      });
-    }, LONG_TIMEOUT);
-
-    it('should fail if no kid is present in the JWT header', () => {
-      return getIdToken(issuer1IdTokenParams)
-      .then(idToken => verifier.verifyIdToken(idToken, expectedClientId, NONCE))
-      .then(jwt => {
-        // Create an ID token that does not have a kid
-        const token = createToken(jwt.claims);
-        return verifier.verifyIdToken(token, expectedClientId, NONCE)
-        .catch(err => expect(err.message).toBe('Error while resolving signing key for kid "undefined"'));
-      });
-    }, LONG_TIMEOUT);
-
-    it('should fail if the kid cannot be found', () => {
-      return getIdToken(issuer1IdTokenParams)
-      .then(idToken => verifier.verifyIdToken(idToken, expectedClientId, NONCE))
-      .then(jwt => {
-        // Create an ID token with the same claims but a kid that will not resolve
-        const token = createToken(jwt.claims, { kid: 'foo' });
-        return verifier.verifyIdToken(token, expectedClientId, NONCE)
-        .catch(err => expect(err.message).toBe('Error while resolving signing key for kid "foo"'));
-      });
-    }, LONG_TIMEOUT);
-
-    it('should fail if the token is expired (exp)', () => {
-      return getIdToken(issuer1IdTokenParams)
-      .then(idToken =>
-        verifier.verifyIdToken(idToken, expectedClientId, NONCE)
-        .then(jwt => {
-          // Now advance time past the exp claim
-          const now = new Date();
-          const then = new Date((jwt.claims.exp * 1000) + 1000);
-          tk.travel(then);
-          return verifier.verifyIdToken(idToken, expectedClientId, NONCE)
-          .then(() => {
-            throw new Error('Should have errored');
-          })
-          .catch(err => {
-            tk.travel(now);
-            expect(err.message).toBe('Jwt is expired');
-          });
-        }));
-    }, LONG_TIMEOUT);
-
-    it('should allow me to assert custom claims', () => {
-      const verifier = createVerifier({
-        assertClaims: {
-          aud: 'baz',
-          foo: 'bar'
-        }
-      });
-      return getIdToken(issuer1IdTokenParams)
-      .then(idToken =>
-        verifier.verifyIdToken(idToken, expectedClientId, NONCE)
-        .catch(err => {
-          // Extra debugging for an intermittent issue
-          const result = typeof idToken === 'string' ? 'idToken is a string' : idToken;
-          expect(result).toBe('idToken is a string');
-          expect(err.message).toBe(
-            `claim 'aud' value '${CLIENT_ID}' does not match expected value 'baz', claim 'foo' value 'undefined' does not match expected value 'bar'`
-          );
-        })
-      );
-    }, LONG_TIMEOUT);
-
-    it('should cache the jwks for the configured amount of time', () => {
-      const verifier = createVerifier({
-        cacheMaxAge: 500
-      });
-      return getIdToken(issuer1IdTokenParams)
-      .then(idToken => {
-        nock.recorder.rec({
-          output_objects: true,
-          dont_print: true
-        });
-        const nockCallObjects = nock.recorder.play();
-        return verifier.verifyIdToken(idToken, expectedClientId, NONCE)
-        .then(jwt => {
-          expect(nockCallObjects.length).toBe(1);
-          return verifier.verifyIdToken(idToken, expectedClientId, NONCE);
-        })
-        .then(jwt => {
-          expect(nockCallObjects.length).toBe(1);
-          return new Promise((resolve, reject) => {
-            setTimeout(() => {
-              verifier.verifyIdToken(idToken, expectedClientId, NONCE)
-              .then(jwt => {
-                expect(nockCallObjects.length).toBe(2);
-                resolve();
-              })
-              .catch(reject);
-            }, 1000);
-          });
-        })
-      });
-    }, LONG_TIMEOUT);
-
-    it('should rate limit jwks endpoint requests on cache misses', () => {
-      const verifier = createVerifier({
-        jwksRequestsPerMinute: 2
-      });
-      return getIdToken(issuer1IdTokenParams)
-      .then((idToken => {
-        nock.recorder.clear();
-        return verifier.verifyIdToken(idToken, expectedClientId, NONCE)
-        .then(jwt => {
-          // Create an ID token with the same claims but a kid that will not resolve
-          const token = createToken(jwt.claims, { kid: 'foo' });
-          return verifier.verifyIdToken(token, expectedClientId, NONCE)
-          .catch(err => verifier.verifyIdToken(token, expectedClientId, NONCE))
-          .catch(err => {
-            const nockCallObjects = nock.recorder.play();
-            // Expect 1 request for the valid kid, and 1 request for the 2 attempts with an invalid kid
-            expect(nockCallObjects.length).toBe(2);
-          });
-        })
-      }));
-    });
-
-  }, LONG_TIMEOUT);
-
   describe('ID Token basic validation', () => {
     const mockKidAsKeyFetch = (verifier) => {
       verifier.jwksClient.getSigningKey = jest.fn( ( kid, onKeyResolve ) => {
