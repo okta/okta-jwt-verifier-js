@@ -1,3 +1,9 @@
+# 3.0.0
+
+### Breaking Changes
+
+- [#8](https://github.com/okta/okta-jwt-verifier-js/pull/8) - Converts Jwt.claims to read-only property
+
 # 2.3.0
 
 ### Features
