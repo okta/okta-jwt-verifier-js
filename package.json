@@ -33,7 +33,7 @@
       "default",
       "jest-junit"
     ],
-    "testEnvironment": "jsdom"
+    "testEnvironment": "node"
   },
   "license": "Apache-2.0",
   "dependencies": {
