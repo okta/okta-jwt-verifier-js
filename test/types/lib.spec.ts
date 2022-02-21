@@ -66,8 +66,8 @@ const main = async () => {
   // verifyIdToken
   // Expected error: Missing expectedClientId
   expectError(verifier.verifyIdToken('idTokenString'));
-  // Expected error: Missing expectedNonce
-  expectError(verifier.verifyIdToken('idTokenString', 'expectedClientId'));
+  // expectedNonce is optional
+  expectType<OktaJwtVerifier.Jwt>(await verifier.verifyIdToken('idTokenString', 'expectedClientId'));
   // Expected error: Invalid type for expectedClientId
   expectError(verifier.verifyIdToken('idTokenString', ['expectedClientId'], 'expectedNonce'));
   expectType<OktaJwtVerifier.Jwt>(await verifier.verifyIdToken('idTokenString', 'expectedClientId', 'expectedNonce'));
