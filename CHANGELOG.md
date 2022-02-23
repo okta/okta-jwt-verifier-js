@@ -2,7 +2,8 @@
 
 ### Other
 
-- [#11](https://github.com/okta/okta-jwt-verifier-js/pull/11) Updates njwt dependency to 1.2.0 for security fixes
+- [#11](https://github.com/okta/okta-jwt-verifier-js/pull/11) - Updates njwt dependency to 1.2.0 for security fixes
+- [#10](https://github.com/okta/okta-jwt-verifier-js/pull/10) - Updates lib.d.ts
 
 # 2.3.0
 

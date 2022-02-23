@@ -35,7 +35,7 @@ declare class OktaJwtVerifier {
   verifyIdToken(
     idTokenString: string,
     expectedClientId: string,
-    expectedNonce: string
+    expectedNonce?: string
   ): Promise<OktaJwtVerifier.Jwt>;
 
   private verifyAsPromise(tokenString: string): Promise<OktaJwtVerifier.Jwt>;
@@ -73,7 +73,7 @@ declare namespace OktaJwtVerifier {
      * ```
      * Validation fails and an error is returned if the token does not have the configured claim.
      *
-     * Read more: https://github.com/okta/okta-oidc-js/tree/master/packages/jwt-verifier#custom-claims-assertions
+     * Read more: https://github.com/okta/okta-jwt-verifier-js#custom-claims-assertions
      */
     assertClaims?: Record<string, unknown>;
     /**
@@ -82,7 +82,7 @@ declare namespace OktaJwtVerifier {
      * By default, found keys are cached by key ID for one hour. This can be
      * configured with the cacheMaxAge option for cache entries.
      *
-     * Read more: https://github.com/okta/okta-oidc-js/tree/master/packages/jwt-verifier#caching--rate-limiting
+     * Read more: https://github.com/okta/okta-jwt-verifier-js#caching--rate-limiting
      */
     cacheMaxAge?: number;
     /**
@@ -93,9 +93,18 @@ declare namespace OktaJwtVerifier {
      * JWKs requests per minute is enforced. This is configurable with the
      * jwksRequestsPerMinute option.
      *
-     * Read more: https://github.com/okta/okta-oidc-js/tree/master/packages/jwt-verifier#caching--rate-limiting
+     * Read more: https://github.com/okta/okta-jwt-verifier-js#caching--rate-limiting
      */
     jwksRequestsPerMinute?: number;
+    /**
+     * Custom JWKS URI
+     * 
+     * It's useful when JWKS URI cannot be based on Issuer URI
+     * Defaults to `${issuer}/v1/keys`
+     * 
+     * Read more: https://github.com/okta/okta-jwt-verifier-js#custom-jwks-uri
+     */
+    jwksUri?: string;
   }
 
   type Algorithm =
