@@ -9,6 +9,9 @@
  *
  * See the License for the specific language governing permissions and limitations under the License.
  */
+import { AgentOptions as HttpAgentOptions } from "node:http";
+import { AgentOptions as HttpsAgentOptions } from "node:https";
+
 export = OktaJwtVerifier;
 
 declare class OktaJwtVerifier {
@@ -98,13 +101,22 @@ declare namespace OktaJwtVerifier {
     jwksRequestsPerMinute?: number;
     /**
      * Custom JWKS URI
-     * 
+     *
      * It's useful when JWKS URI cannot be based on Issuer URI
      * Defaults to `${issuer}/v1/keys`
-     * 
+     *
      * Read more: https://github.com/okta/okta-jwt-verifier-js#custom-jwks-uri
      */
     jwksUri?: string;
+
+    /**
+     * Additional options to pass to the jwks-rsa constructor
+     *
+     * Can be used to configure the underlying axios agent within the jwks-rsa library,
+     * for example to add additional certificate authorities without having to set the
+     * NODE_EXTRA_CA_CERTS environment variable.
+     */
+    requestAgentOptions?: HttpAgentOptions | HttpsAgentOptions;
   }
 
   type Algorithm =
