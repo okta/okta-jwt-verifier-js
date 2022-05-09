@@ -9,8 +9,11 @@
  *
  * See the License for the specific language governing permissions and limitations under the License.
  */
+
+/* eslint-disable node/no-missing-import */
 import { AgentOptions as HttpAgentOptions } from "node:http";
 import { AgentOptions as HttpsAgentOptions } from "node:https";
+/* eslint-enable node/no-missing-import */
 
 export = OktaJwtVerifier;
 
