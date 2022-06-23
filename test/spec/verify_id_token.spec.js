@@ -39,13 +39,12 @@ const issuer1TokenParams = {
 
 
 describe('Jwt Verifier - Verify ID Token', () => {
+  const mockKidAsKeyFetch = (verifier) => {
+    verifier.jwksClient.getSigningKey = jest.fn( ( kid, onKeyResolve ) => {
+      onKeyResolve(null, { publicKey: kid } );
+    });
+  };
   describe('ID Token basic validation', () => {
-    const mockKidAsKeyFetch = (verifier) => {
-      verifier.jwksClient.getSigningKey = jest.fn( ( kid, onKeyResolve ) => {
-        onKeyResolve(null, { publicKey: kid } );
-      });
-    };
-
     it('fails if the signature is invalid', () => {
       const token = createToken({
         aud: '0oaoesxtxmPf08QHk0h7',
@@ -77,7 +76,6 @@ describe('Jwt Verifier - Verify ID Token', () => {
 
       return verifier.verifyIdToken(token, '0oaoesxtxmPf08QHk0h7');
     });
-
     it('fails if iss claim does not match verifier issuer', () => {
       const token = createToken({
         aud: '0oaoesxtxmPf08QHk0h7',
@@ -364,5 +362,39 @@ describe('Jwt Verifier - Verify ID Token', () => {
       ));
     });
   });
-  
+
+  describe('Verified JWT', function () {
+    let jwt;
+    beforeEach(async () => {
+      const token = createToken({
+        aud: '0oaoesxtxmPf08QHk0h7',
+        iss: ISSUER,
+      }, {
+        kid: rsaKeyPair.public
+      });
+
+      const verifier = createVerifier();
+      mockKidAsKeyFetch(verifier);
+
+      jwt = await verifier.verifyIdToken(token, '0oaoesxtxmPf08QHk0h7');
+    });
+
+    it('has claims accessors', () => {
+      expect(jwt.isExpired()).toBe(false);
+      expect(jwt.isNotBefore()).toBe(false);
+    });
+
+    it('has readonly \'claims\' property', () => {
+      jwt.claims = { aud: 'defaultAPI' };
+      expect(jwt.claims.aud).toEqual('0oaoesxtxmPf08QHk0h7');
+    });
+
+    it('tracks mutations done by claims accessors in the \'claims\' property', () => {
+      jwt.setClaim('customClaim', 'claimValue');
+      expect(jwt.claims.customClaim).toEqual('claimValue');
+
+      jwt.setClaim('exp', (new Date() - 1) / 1000);
+      expect(jwt.isExpired()).toBe(true);
+    });
+  })
 });
