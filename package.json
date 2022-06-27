@@ -41,7 +41,9 @@
     "njwt": "^1.2.0"
   },
   "resolutions": {
-    "axios": "^0.21.2"
+    "axios": "^0.21.2",
+    "minimist": "^1.2.6",
+    "qs": "6.10.3"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.18.0",
