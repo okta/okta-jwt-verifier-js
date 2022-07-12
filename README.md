@@ -103,6 +103,70 @@ oktaJwtVerifier.verifyIdToken(idTokenString, expectedClientId, expectedNonce)
 
 The expected client ID passed to `verifyIdToken()` is required. Expected nonce value is optional and required if the claim is present in the token body.
 
+#### Example return values of `verifyIdToken` and `verifyAccessToken`:
+
+```javascript
+{
+  header: {
+    typ: 'JWT',
+    alg: 'RS256',
+    kid: 'keyId'
+  },
+  claims: {
+    sub: 'sub',
+    name: 'name',
+    email: 'email',
+    ver: 1,
+    iss: 'https://foobar.org/oauth2/default',
+    aud: 'aud',
+    iat: 1657621175,
+    exp: 1657624775,
+    jti: 'jti',
+    amr: [ 'pwd' ],
+    idp: 'idp',
+    nonce: 'nonce',
+    preferred_username: 'username@foobar.org',
+    auth_time: 1657621173,
+    at_hash: 'at_hash'
+  },
+  toString: () => 'base64-encoded token',
+  setClaim: (claim, value) => token,
+  setJti: (jti) => token,
+  setSubject: (sub) => token,
+  setIssuer: (iss) => token,
+  setIssuedAt: (iat) => token,
+  setExpiration: (exp) => token,
+  setNotBefore: (nbf) => token,
+  isExpired: () => Boolean,
+  isNotBefore: () => Boolean,
+```
+
+```javascript
+{
+  userMessage: 'Jwt is expired',
+  jwtString: 'base64-encoded token',
+  parsedHeader: JwtHeader {
+    typ: 'JWT',
+    alg: 'RS256',
+    kid: 'keyId'
+  },
+  parsedBody:
+    ver: 1,
+    jti: 'jti',
+    iss: 'iss',
+    aud: 'api://default',
+    iat: 1657621175,
+    exp: 1657621475,
+    cid: 'cid',
+    uid: 'uid',
+    scp: [ 'openid', 'email', 'profile' ],
+    auth_time: 1657621173,
+    sub: 'userame@foobar.org'
+  },
+  innerError: undefined
+}
+```
+
 
 ## Custom Claims Assertions
 
