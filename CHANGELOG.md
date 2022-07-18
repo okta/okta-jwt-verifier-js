@@ -1,5 +1,9 @@
 # 2.4.0
 
+### Fixes
+
+- [#8](https://github.com/okta/okta-jwt-verifier-js/pull/8) - Fixes error on `jwt.isExpired()` invocation
+
 ### Other
 
 - [#11](https://github.com/okta/okta-jwt-verifier-js/pull/11) - Updates njwt dependency to 1.2.0 for security fixes

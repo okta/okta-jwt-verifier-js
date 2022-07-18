@@ -17,6 +17,9 @@ class ConfigurationValidationError extends Error {}
 
 const findDomainURL = 'https://bit.ly/finding-okta-domain';
 const findAppCredentialsURL = 'https://bit.ly/finding-okta-app-credentials';
+const njwtTokenBodyMethods = [
+  'setClaim', 'setJti', 'setSubject', 'setIssuer', 'setIssuedAt',
+  'setExpiration', 'setNotBefore', 'isExpired', 'isNotBefore'];
 
 const assertIssuer = (issuer, testing = {}) => {
   const isHttps = new RegExp('^https://');
@@ -205,9 +208,20 @@ class OktaJwtVerifier {
           return reject(err);
         }
 
-        jwt.claims = jwt.body;
-        delete jwt.body;
+        const jwtBodyProxy = new Proxy(jwt.body, {});
+        Object.defineProperty(jwt, 'claims', {
+          enumerable: true,
+          writable: false,
+          value: jwtBodyProxy
+        });
 
+        njwtTokenBodyMethods.forEach(methodName => {
+          let method = jwt[methodName];
+          if (method) {
+            jwt[methodName] = method.bind({ body: jwtBodyProxy });
+          }
+        });
+        delete jwt.body;
         resolve(jwt);
       });
     });
