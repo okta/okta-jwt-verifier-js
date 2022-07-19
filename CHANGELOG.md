@@ -1,4 +1,8 @@
-# 2.4.0
+# 2.6.0
+
+### Featuers
+
+- [#12](https://github.com/okta/okta-jwt-verifier-js/pull/12) - Passes requestAgentOptions through to the jwks-rsa library
 
 ### Fixes
 
