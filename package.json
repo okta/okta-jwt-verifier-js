@@ -37,7 +37,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "jwks-rsa": "1.12.3",
+    "jwks-rsa": "^3.0.0",
     "njwt": "^1.2.0"
   },
   "resolutions": {
