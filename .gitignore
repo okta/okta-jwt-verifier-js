@@ -25,6 +25,7 @@ coverage
 
 # test reports
 packages/*/reports/
+reports/
 
 # android/ios related for react native
 .gradle/

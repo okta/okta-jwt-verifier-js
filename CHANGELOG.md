@@ -1,3 +1,15 @@
+# 3.0.0
+
+### Breaking Changes
+
+- Increases minimum Node version to 14
+
+### Other
+
+- [#25](https://github.com/okta/okta-jwt-verifier-js/pull/25) 
+  - Updates njwt and jwks-rsa versions to address security vulnerability in shared sub dependency (jsonwebtoken)
+  - Resolves https://github.com/okta/okta-jwt-verifier-js/issues/21
+
 # 2.6.0
 
 ### Featuers
