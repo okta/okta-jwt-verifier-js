@@ -41,7 +41,6 @@
     "njwt": "^2.0.0"
   },
   "resolutions": {
-    "jsonwebtoken": "^9.0.0",
     "minimist": "^1.2.6"
   },
   "devDependencies": {
