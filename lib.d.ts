@@ -11,8 +11,14 @@
  */
 
 /* eslint-disable node/no-missing-import */
-import { AgentOptions as HttpAgentOptions } from "node:http";
-import { AgentOptions as HttpsAgentOptions } from "node:https";
+import { 
+  AgentOptions as HttpAgentOptions,
+  Agent as HttpAgent,
+} from "node:http";
+import { 
+  AgentOptions as HttpsAgentOptions,
+  Agent as HttpsAgent,
+} from "node:https";
 /* eslint-enable node/no-missing-import */
 
 export = OktaJwtVerifier;
@@ -118,8 +124,16 @@ declare namespace OktaJwtVerifier {
      * Can be used to configure the underlying axios agent within the jwks-rsa library,
      * for example to add additional certificate authorities without having to set the
      * NODE_EXTRA_CA_CERTS environment variable.
+     * 
+     * @deprecated use `requestAgent` instead
      */
     requestAgentOptions?: HttpAgentOptions | HttpsAgentOptions;
+
+    /**
+     * HttpAgent or HttpsAgent to use for requests to the JWKS endpoint. 
+     * Agent example: https://github.com/TooTallNate/node-https-proxy-agent
+     */
+    requestAgent?: HttpAgent | HttpsAgent;
   }
 
   type Algorithm =
