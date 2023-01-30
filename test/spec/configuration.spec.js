@@ -89,6 +89,20 @@ describe('jwt-verifier configuration validation', () => {
     expect(createInstance).toThrow();
   });
 
+  it('should throw if `requestAgentOptions` is passed', () => {
+    function createInstance() {
+      new OktaJwtVerifier({
+        issuer: 'https://foo',
+        clientId: '123456',
+        requestAgentOptions: {
+          timeout: 10000
+        }
+      });
+    }
+
+    expect(createInstance).toThrow();
+  });
+
   it('should NOT throw if clientId not matching {clientId} is provided', () => {
     function createInstance() {
       new OktaJwtVerifier({
