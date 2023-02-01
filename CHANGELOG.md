@@ -1,3 +1,8 @@
+# 3.0.1
+
+- [#28](https://github.com/okta/okta-jwt-verifier-js/pull/25) - Fix for deprecated option `requestAgentOptions` in favor of `requestAgent` (via jwks-rsa)
+  - More info: https://github.com/auth0/node-jwks-rsa/blob/master/CHANGELOG.md#request-agent-options
+
 # 3.0.0
 
 ### Breaking Changes
