@@ -177,6 +177,14 @@ class OktaJwtVerifier {
       assertClientId(options.clientId);
     }
 
+    // https://github.com/auth0/node-jwks-rsa/blob/master/CHANGELOG.md#request-agent-options
+    if (options.requestAgentOptions) {
+      // jwks-rsa no longer accepts 'requestAgentOptions' and instead requires a http(s).Agent be passed directly
+      const msg = `\`requestAgentOptions\` has been deprecated, use \`requestAgent\` instead. 
+      For more info see https://github.com/auth0/node-jwks-rsa/blob/master/CHANGELOG.md#request-agent-options`;
+      throw new ConfigurationValidationError(msg);
+    }
+
     this.claimsToAssert = options.assertClaims || {};
     this.issuer = options.issuer;
     this.jwksUri = getJwksUri(options);
@@ -187,7 +195,9 @@ class OktaJwtVerifier {
       cacheMaxEntries: 3,
       jwksRequestsPerMinute: options.jwksRequestsPerMinute || 10,
       rateLimit: true,
-      requestAgentOptions: options.requestAgentOptions,
+      // https://github.com/auth0/node-jwks-rsa/blob/master/CHANGELOG.md#request-agent-options
+      // requestAgentOptions: options.requestAgentOptions,    !! DEPRECATED !!
+      requestAgent: options.requestAgent,
     });
     this.verifier = nJwt.createVerifier().setSigningAlgorithm('RS256').withKeyResolver((kid, cb) => {
       if (kid) {
