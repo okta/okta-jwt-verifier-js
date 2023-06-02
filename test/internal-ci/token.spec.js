@@ -38,8 +38,11 @@ const issuer1TokenParams = {
   NONCE
 };
 
-describe('Access token test with api call', () => {
+// JWT_VERIFIER_REPO env var is only set in PDV script
+if (process.env.JWT_VERIFIER_REPO) describe.only('Running only PDV tests', () => {
+  console.warn('skipping non-PDV tests');
   const expectedAud = 'api://default';
+  const expectedClientId = CLIENT_ID;
   const verifier = createVerifier();
 
   it('should allow me to verify Okta access tokens', () => {
@@ -50,11 +53,24 @@ describe('Access token test with api call', () => {
     });
   }, LONG_TIMEOUT);
 
+  it('should allow me to verify Okta ID tokens', () => {
+    return getIdToken(issuer1TokenParams)
+    .then(idToken => {
+      return verifier.verifyIdToken(idToken, expectedClientId, NONCE);
+    })
+    .then(jwt => {
+      expect(jwt.claims.iss).toBe(ISSUER);
+    });
+  }, LONG_TIMEOUT);
+});
+
+describe('Access token test with api call', () => {
+  const expectedAud = 'api://default';
+  const verifier = createVerifier();
+
   it('should allow me to verify Okta access tokens', () => {
     return getAccessToken(issuer1TokenParams)
-    .then(accessToken => {
-      return verifier.verifyAccessToken(accessToken, expectedAud);
-    })
+    .then(accessToken => verifier.verifyAccessToken(accessToken, expectedAud))
     .then(jwt => {
       expect(jwt.claims.iss).toBe(ISSUER);
     });
