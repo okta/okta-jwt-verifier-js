@@ -5,11 +5,10 @@ source ${OKTA_HOME}/${REPO}/scripts/setup.sh
 export TEST_SUITE_TYPE="junit"
 export TEST_RESULT_FILE_DIR="${REPO}/reports/ci"
 
-export ISSUER=https://samples-javascript.okta.com/oauth2/default
-export CLIENT_ID=0oapmwm72082GXal14x6
-export USERNAME=george@acme.com
-get_secret prod/okta-sdk-vars/password PASSWORD
-
+export ISSUER=https://sdk-test-ok14.okta.com/oauth2/default
+export CLIENT_ID=0oa5dztAOmaWJ09Dm694
+export USERNAME=alex@acme.com
+get_vault_secret_key devex/pdv/ok14 PASSWORD PASSWORD
 
 export CI=true
 export DBUS_SESSION_BUS_ADDRESS=/dev/null
