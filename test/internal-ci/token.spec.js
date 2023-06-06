@@ -17,6 +17,7 @@ const constants = require('../constants')
 
 // These tests involve LIVE network requests and run in a resource-constrained CI environment
 const LONG_TIMEOUT = 15000;
+const LONG_TIMEOUT_PDV = 50000;
 
 const { getAccessToken, getIdToken, createVerifier, createToken} = require('../util');
 
@@ -51,7 +52,7 @@ if (process.env.JWT_VERIFIER_REPO) describe.only('Running only PDV tests', () =>
     .then(jwt => {
       expect(jwt.claims.iss).toBe(ISSUER);
     });
-  }, LONG_TIMEOUT);
+  }, LONG_TIMEOUT_PDV);
 
   it('should allow me to verify Okta ID tokens', () => {
     return getIdToken(issuer1TokenParams)
@@ -61,7 +62,7 @@ if (process.env.JWT_VERIFIER_REPO) describe.only('Running only PDV tests', () =>
     .then(jwt => {
       expect(jwt.claims.iss).toBe(ISSUER);
     });
-  }, LONG_TIMEOUT);
+  }, LONG_TIMEOUT_PDV);
 });
 
 describe('Access token test with api call', () => {
