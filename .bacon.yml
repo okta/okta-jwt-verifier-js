@@ -27,3 +27,10 @@ test_suites:
     script_name: publish
     criteria: MERGE
     queue_name: small
+  - name: semgrep
+    script_path: '../okta-jwt-verifier-js/scripts'
+    sort_order: '5'
+    timeout: '10'
+    script_name: semgrep
+    criteria: MERGE
+    queue_name: small
