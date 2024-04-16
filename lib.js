@@ -270,6 +270,39 @@ class OktaJwtVerifier {
 
     return jwt;
   }
+
+  // ref: https://datatracker.ietf.org/doc/html/rfc7519#section-4.1
+  async verifyOktaIssuedJwt(jwtString, expectedClaims) {
+    const jwt = (await this.verifyAsPromise(jwtString));
+
+    // iss - https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.1
+    verifyIssuer(this.issuer, jwt.claims.iss);
+
+    // sub - https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.2
+    const expectedSubject = expectedClaims.subject || expectedClaims.sub;
+    if (expectedSubject && expectedSubject !== jwt.claims.sub) {
+      throw new Error(`subject ${jwt.claims.sub} does not match expected issuer: ${expectedSubject}`);
+    }
+
+    // aud - https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.3
+    const expectedAudience = expectedClaims.audience || expectedClaims.aud;
+    !!expectedAudience && verifyAudience(expectedAudience, jwt.claims.aud);
+
+    // Confirmed by njwt
+    // exp - https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.4
+    // nbf - https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.5
+
+    // iat - https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.6
+    // time/date checks are done via njwt
+
+    // jti - https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.7
+    const expectedJwtId = expectedClaims.jwtid || expectedClaims.jti;
+    if (expectedJwtId && expectedJwtId !== jwt.claims.jti) {
+      throw new Error(`jwtId ${jwt.claims.jti} does not match expected issuer: ${expectedJwtId}`);
+    }
+
+    verifyAssertedClaims(this, jwt.claims);
+  }
 }
 
 module.exports = OktaJwtVerifier;
