@@ -11,11 +11,12 @@
     "build": "node build-scripts/build.js",
     "banners": "node build-scripts/maintain-banners.js",
     "prepare": "yarn build",
-    "test": "yarn test:unit && yarn test:integration && yarn lint",
+    "test": "yarn test:unit && yarn test:integration && test:types && yarn lint",
     "test:integration": "../../scripts/tck.sh",
     "test:unit": "JEST_JUNIT_OUTPUT_FILE=./reports/unit/results.xml jest --runInBand test/spec",
     "test:ci": "JEST_JUNIT_OUTPUT_FILE=./reports/ci/results.xml jest test/internal-ci",
-    "lint": "eslint . --ext .js --ext .ts && tsd"
+    "test:types": "tstyche",
+    "lint": "eslint . --ext .js --ext .ts"
   },
   "keywords": [
     "okta",
@@ -62,19 +63,7 @@
     "node-fetch": "^2.6.7",
     "shelljs": "^0.8.5",
     "timekeeper": "^1.0.0",
-    "tsd": "^0.19.1",
+    "tstyche": "^1.1.0",
     "typescript": "^4.1.5"
-  },
-  "tsd": {
-    "directory": "test/types",
-    "compilerOptions": {
-      "skipLibCheck": true,
-      "esModuleInterop": true,
-      "paths": {
-        "@okta/jwt-verifier": [
-          "."
-        ]
-      }
-    }
   }
 }

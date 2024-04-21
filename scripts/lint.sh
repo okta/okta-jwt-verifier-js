@@ -7,4 +7,9 @@ if ! yarn lint; then
   exit ${TEST_FAILURE}
 fi
 
+if ! yarn test:types; then
+  echo "tstyche failed! Exiting..."
+  exit ${TEST_FAILURE}
+fi
+
 exit ${SUCCESS}

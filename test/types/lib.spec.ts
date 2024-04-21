@@ -1,38 +1,42 @@
-import OktaJwtVerifier from '../../lib';
-import {expectType, expectError, expectAssignable, expectNotAssignable} from 'tsd';
+import OktaJwtVerifier from '../../';
+import {expect, test} from 'tstyche';
 
-const main = async () => {
-  // OktaJwtVerifier constructor
+const verifier = new OktaJwtVerifier({ issuer: 'https://foo' });
+
+const jwt = await verifier.verifyAccessToken('accessTokenString', [
+  'expectedAudience',
+  'expectedAudience2',
+]);
+
+test("OktaJwtVerifier constructor", () => {
   // issuer is required
-  const verifier = new OktaJwtVerifier({ issuer: 'https://foo' });
-  expectType<OktaJwtVerifier>(verifier);
+  expect(verifier).type.toEqual<OktaJwtVerifier>();
   // Expected error: Missing issuer
-  expectError(new OktaJwtVerifier({ clientId: '1234' }));
+  expect(new OktaJwtVerifier({ clientId: '1234' })).type.toRaiseError();
   // With all options
-  expectType<OktaJwtVerifier>(new OktaJwtVerifier({
+  expect(new OktaJwtVerifier({
     issuer: 'https://foo',
     clientId: '1234',
     assertClaims: { cid: '{clientId}' },
     cacheMaxAge: 1000*60*60*2,
     jwksRequestsPerMinute: 100
-  }));
+  })).type.toEqual<OktaJwtVerifier>();
+});
 
-  // verifyAccessToken
+test("verifyAccessToken", async () => {
   // Expected error: Missing expectedAudience
-  expectError(verifier.verifyAccessToken('accessTokenString'));
-  expectType<OktaJwtVerifier.Jwt>(await verifier.verifyAccessToken('accessTokenString', 'expectedAudience'));
-  const jwt = await verifier.verifyAccessToken('accessTokenString', [
-    'expectedAudience',
-    'expectedAudience2',
-  ]);
+  expect(await verifier.verifyAccessToken('accessTokenString')).type.toRaiseError();
+  expect(await verifier.verifyAccessToken('accessTokenString', 'expectedAudience')).type.toEqual<OktaJwtVerifier.Jwt>();
+});
 
-  // JWT
-  expectType<OktaJwtVerifier.JwtClaims>(jwt.claims);
-  expectType<OktaJwtVerifier.JwtHeader>(jwt.header);
-  expectType<string>(jwt.toString());
+test("JWT", () => {
+  expect(jwt.claims).type.toEqual<OktaJwtVerifier.JwtClaims>();
+  expect(jwt.header).type.toEqual<OktaJwtVerifier.JwtHeader>();
+  expect(jwt.toString()).type.toBeString();
+});
 
-  // JWT Claims
-  expectAssignable<OktaJwtVerifier.JwtClaims>({    
+test("JWT Claims", () => {
+  expect<OktaJwtVerifier.JwtClaims>().type.toBeAssignable({    
     jti: "AT.0mP4JKAZX1iACIT4vbEDF7LpvDVjxypPMf0D7uX39RE",
     iss: "https://${yourOktaDomain}/oauth2/0oacqf8qaJw56czJi0g4",
     aud: "https://api.example.com",
@@ -49,28 +53,28 @@ const main = async () => {
     ],
     custom_claim: "CustomValue"
   });
-  expectNotAssignable<OktaJwtVerifier.JwtClaims>({
+  expect<OktaJwtVerifier.JwtClaims>().type.not.toBeAssignable({
     exp: 'not-a-number'
   });
+});
 
-  // JWT Header
-  expectAssignable<OktaJwtVerifier.JwtHeader>({
-    alg: 'RS256',
+test("JWT Header", () => {
+  expect<OktaJwtVerifier.JwtHeader>().type.toBeAssignable({
+    alg: 'RS256' as const,
     kid: "45js03w0djwedsw",
     typ: 'JWT'
   });
-  expectNotAssignable<OktaJwtVerifier.JwtHeader>({
-    alg: 'unsupported-alg',
+  expect<OktaJwtVerifier.JwtHeader>().type.not.toBeAssignable({
+    alg: 'unsupported-alg' as const,
   });
+});
 
-  // verifyIdToken
+test("verifyIdToken", async () => {
   // Expected error: Missing expectedClientId
-  expectError(verifier.verifyIdToken('idTokenString'));
+  expect(await verifier.verifyIdToken('idTokenString')).type.toRaiseError();
   // expectedNonce is optional
-  expectType<OktaJwtVerifier.Jwt>(await verifier.verifyIdToken('idTokenString', 'expectedClientId'));
+  expect(await verifier.verifyIdToken('idTokenString', 'expectedClientId')).type.toEqual<OktaJwtVerifier.Jwt>();
   // Expected error: Invalid type for expectedClientId
-  expectError(verifier.verifyIdToken('idTokenString', ['expectedClientId'], 'expectedNonce'));
-  expectType<OktaJwtVerifier.Jwt>(await verifier.verifyIdToken('idTokenString', 'expectedClientId', 'expectedNonce'));
-};
-
-main();
+  expect(await verifier.verifyIdToken('idTokenString', ['expectedClientId'], 'expectedNonce')).type.toRaiseError();
+  expect(await verifier.verifyIdToken('idTokenString', 'expectedClientId', 'expectedNonce')).type.toEqual<OktaJwtVerifier.Jwt>();
+});
