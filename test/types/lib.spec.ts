@@ -53,7 +53,7 @@ test("JWT Claims", () => {
     ],
     custom_claim: "CustomValue"
   });
-  expect<OktaJwtVerifier.JwtClaims>().type.not.toBeAssignable({
+  expect<OktaJwtVerifier.JwtClaims>().type.not.toMatch({
     exp: 'not-a-number'
   });
 });
@@ -64,9 +64,8 @@ test("JWT Header", () => {
     kid: "45js03w0djwedsw",
     typ: 'JWT'
   });
-  expect<OktaJwtVerifier.JwtHeader>().type.not.toBeAssignable({
+  expect<OktaJwtVerifier.JwtHeader>().type.not.toMatch({
     alg: 'unsupported-alg' as const,
-    typ: 'JWT'
   });
 });
 
