@@ -66,6 +66,7 @@ test("JWT Header", () => {
   });
   expect<OktaJwtVerifier.JwtHeader>().type.not.toBeAssignable({
     alg: 'unsupported-alg' as const,
+    typ: 'JWT'
   });
 });
 
