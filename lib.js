@@ -125,13 +125,18 @@ function verifyAudience(expected, aud) {
   if (!expected) {
     throw new Error('expected audience is required');
   }
-
-  if (Array.isArray(expected) && !expected.includes(aud)) {
-    throw new Error(`audience claim ${aud} does not match one of the expected audiences: ${expected.join(', ')}`);
-  }
-
-  if (!Array.isArray(expected) && aud !== expected) {
-    throw new Error(`audience claim ${aud} does not match expected audience: ${expected}`);
+  if (!Array.isArray(aud)) {
+    if (Array.isArray(expected) && !expected.includes(aud)) {
+      throw new Error(`audience claim ${aud} does not match one of the expected audiences: ${expected.join(', ')}`);
+    }
+  
+    if (!Array.isArray(expected) && aud !== expected) {
+      throw new Error(`audience claim ${aud} does not match expected audience: ${expected}`);
+    }
+  } else {
+    if (!aud.includes(expected)) {
+      throw new Error(`audience claims ${aud.join(', ')} do not include expected audience: ${expected}`);
+    }
   }
 }
 
