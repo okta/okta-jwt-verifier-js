@@ -122,7 +122,71 @@ describe('Jwt Verifier - Verify Access Token', () => {
 
       return verifier.verifyAccessToken(token, [ 'one', 'http://myapp.com/', 'three'] );
     });
+    
+    it('passes when given an audience that is an array and matches the expectation', () => {
+      const token = createToken({
+        aud: ['http://myapp.com/', 'one'],
+        iss: ISSUER,
+      }, {
+        kid: rsaKeyPair.public // For override of key retrieval below
+      });
 
+      const verifier = createVerifier();
+      mockKidAsKeyFetch(verifier);
+
+      return verifier.verifyAccessToken(token, 'http://myapp.com/');
+    })
+
+    it('passes when given an audience that is an array and there is a match in the expectation array', () => {
+      const token = createToken({
+        aud: ['http://myapp.com/', 'one'],
+        iss: ISSUER,
+      }, {
+        kid: rsaKeyPair.public // For override of key retrieval below
+      });
+
+      const verifier = createVerifier();
+      mockKidAsKeyFetch(verifier);
+
+      return verifier.verifyAccessToken(token, ['two', 'http://myapp.com/']);
+    })
+
+    it('fails when given an audience that is an array and doesnt match the expectation', () => {
+      const token = createToken({
+        aud: ['http://myapp.com/', 'one'],
+        iss: ISSUER,
+      }, {
+        kid: rsaKeyPair.public // For override of key retrieval below
+      });
+
+      const verifier = createVerifier();
+      mockKidAsKeyFetch(verifier);
+
+      return verifier.verifyAccessToken(token, 'two')
+      .then( () => { throw new Error('Invalid audience claim was accepted') } )
+      .catch(err => {
+        expect(err.message).toBe(`audience claims http://myapp.com/, one do not include expected audience: two`);
+      });
+    })
+
+    it('fails when given an audience that is an array and there is no match in the expectation array', () => {
+      const token = createToken({
+        aud: ['http://myapp.com/', 'one'],
+        iss: ISSUER,
+      }, {
+        kid: rsaKeyPair.public // For override of key retrieval below
+      });
+
+      const verifier = createVerifier();
+      mockKidAsKeyFetch(verifier);
+
+      return verifier.verifyAccessToken(token, ['two, three'])
+      .then( () => { throw new Error('Invalid audience claim was accepted') } )
+      .catch(err => {
+        expect(err.message).toBe(`audience claims http://myapp.com/, one do not match one of the expected audiences: two, three`);
+      });
+    })
+    
     it('fails with a invalid audience when given a valid expectation', () => {
       const token = createToken({
         aud: 'http://wrong-aud.com/',
