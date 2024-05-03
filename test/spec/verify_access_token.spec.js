@@ -162,7 +162,11 @@ describe('Jwt Verifier - Verify Access Token', () => {
       const verifier = createVerifier();
       mockKidAsKeyFetch(verifier);
 
-      return verifier.verifyAccessToken(token, 'two');
+      return verifier.verifyAccessToken(token, 'two')
+      .then( () => { throw new Error('Invalid audience claim was accepted') } )
+      .catch(err => {
+        expect(err.message).toBe(`audience claims http://myapp.com/, one do not include expected audience: two`);
+      });
     })
 
     it('fails when given an audience that is an array and there is no match in the expectation array', () => {
@@ -176,7 +180,11 @@ describe('Jwt Verifier - Verify Access Token', () => {
       const verifier = createVerifier();
       mockKidAsKeyFetch(verifier);
 
-      return verifier.verifyAccessToken(token, ['two', 'three']);
+      return verifier.verifyAccessToken(token, ['two, three'])
+      .then( () => { throw new Error('Invalid audience claim was accepted') } )
+      .catch(err => {
+        expect(err.message).toBe(`audience claims http://myapp.com/, one do not match one of the expected audiences: two, three`);
+      });
     })
     
     it('fails with a invalid audience when given a valid expectation', () => {
