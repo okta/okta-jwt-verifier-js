@@ -122,7 +122,7 @@ describe('Jwt Verifier - Verify Access Token', () => {
 
       return verifier.verifyAccessToken(token, [ 'one', 'http://myapp.com/', 'three'] );
     });
-    
+
     it('passes when given an audience that is an array and matches the expectation', () => {
       const token = createToken({
         aud: ['http://myapp.com/', 'one'],
@@ -186,7 +186,7 @@ describe('Jwt Verifier - Verify Access Token', () => {
         expect(err.message).toBe(`audience claims http://myapp.com/, one do not match one of the expected audiences: two, three`);
       });
     })
-    
+
     it('fails with a invalid audience when given a valid expectation', () => {
       const token = createToken({
         aud: 'http://wrong-aud.com/',

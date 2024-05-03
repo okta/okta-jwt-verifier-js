@@ -1,4 +1,19 @@
+# 3.2.0
+
+### Features
+
+- [#41](https://github.com/okta/okta-jwt-verifier-js/pull/41) - adds jwt `aud` as array support
+  - resolves [#40](https://github.com/okta/okta-jwt-verifier-js/pull/40)
+
+# 3.1.0
+
+### Other
+
+- [#37](https://github.com/okta/okta-jwt-verifier-js/pull/37) - upgrades jwks-rsa dependencies
+
 # 3.0.1
+
+### Fixes
 
 - [#28](https://github.com/okta/okta-jwt-verifier-js/pull/25) - Fix for deprecated option `requestAgentOptions` in favor of `requestAgent` (via jwks-rsa)
   - More info: https://github.com/auth0/node-jwks-rsa/blob/master/CHANGELOG.md#request-agent-options
@@ -17,7 +32,7 @@
 
 # 2.6.0
 
-### Featuers
+### Features
 
 - [#12](https://github.com/okta/okta-jwt-verifier-js/pull/12) - Passes requestAgentOptions through to the jwks-rsa library
 
