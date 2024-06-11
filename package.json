@@ -63,7 +63,7 @@
     "node-fetch": "^2.6.7",
     "shelljs": "^0.8.5",
     "timekeeper": "^1.0.0",
-    "tstyche": "^1.1.0",
+    "tstyche": "^2.0.0",
     "typescript": "^4.1.5"
   }
 }

@@ -10,7 +10,7 @@ const jwt = await verifier.verifyAccessToken('accessTokenString', [
 
 test("OktaJwtVerifier constructor", () => {
   // issuer is required
-  expect(verifier).type.toEqual<OktaJwtVerifier>();
+  expect(verifier).type.toBe<OktaJwtVerifier>();
   // Expected error: Missing issuer
   expect(new OktaJwtVerifier({ clientId: '1234' })).type.toRaiseError();
   // With all options
@@ -20,23 +20,23 @@ test("OktaJwtVerifier constructor", () => {
     assertClaims: { cid: '{clientId}' },
     cacheMaxAge: 1000*60*60*2,
     jwksRequestsPerMinute: 100
-  })).type.toEqual<OktaJwtVerifier>();
+  })).type.toBe<OktaJwtVerifier>();
 });
 
 test("verifyAccessToken", async () => {
   // Expected error: Missing expectedAudience
   expect(await verifier.verifyAccessToken('accessTokenString')).type.toRaiseError();
-  expect(await verifier.verifyAccessToken('accessTokenString', 'expectedAudience')).type.toEqual<OktaJwtVerifier.Jwt>();
+  expect(await verifier.verifyAccessToken('accessTokenString', 'expectedAudience')).type.toBe<OktaJwtVerifier.Jwt>();
 });
 
 test("JWT", () => {
-  expect(jwt.claims).type.toEqual<OktaJwtVerifier.JwtClaims>();
-  expect(jwt.header).type.toEqual<OktaJwtVerifier.JwtHeader>();
+  expect(jwt.claims).type.toBe<OktaJwtVerifier.JwtClaims>();
+  expect(jwt.header).type.toBe<OktaJwtVerifier.JwtHeader>();
   expect(jwt.toString()).type.toBeString();
 });
 
 test("JWT Claims", () => {
-  expect<OktaJwtVerifier.JwtClaims>().type.toBeAssignable({    
+  expect<OktaJwtVerifier.JwtClaims>().type.toBeAssignableWith({    
     jti: "AT.0mP4JKAZX1iACIT4vbEDF7LpvDVjxypPMf0D7uX39RE",
     iss: "https://${yourOktaDomain}/oauth2/0oacqf8qaJw56czJi0g4",
     aud: "https://api.example.com",
@@ -59,7 +59,7 @@ test("JWT Claims", () => {
 });
 
 test("JWT Header", () => {
-  expect<OktaJwtVerifier.JwtHeader>().type.toBeAssignable({
+  expect<OktaJwtVerifier.JwtHeader>().type.toBeAssignableWith({
     alg: 'RS256' as const,
     kid: "45js03w0djwedsw",
     typ: 'JWT'
@@ -73,8 +73,8 @@ test("verifyIdToken", async () => {
   // Expected error: Missing expectedClientId
   expect(await verifier.verifyIdToken('idTokenString')).type.toRaiseError();
   // expectedNonce is optional
-  expect(await verifier.verifyIdToken('idTokenString', 'expectedClientId')).type.toEqual<OktaJwtVerifier.Jwt>();
+  expect(await verifier.verifyIdToken('idTokenString', 'expectedClientId')).type.toBe<OktaJwtVerifier.Jwt>();
   // Expected error: Invalid type for expectedClientId
   expect(await verifier.verifyIdToken('idTokenString', ['expectedClientId'], 'expectedNonce')).type.toRaiseError();
-  expect(await verifier.verifyIdToken('idTokenString', 'expectedClientId', 'expectedNonce')).type.toEqual<OktaJwtVerifier.Jwt>();
+  expect(await verifier.verifyIdToken('idTokenString', 'expectedClientId', 'expectedNonce')).type.toBe<OktaJwtVerifier.Jwt>();
 });
