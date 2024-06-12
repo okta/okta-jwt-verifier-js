@@ -1,3 +1,9 @@
+# 3.2.1
+
+### Fixes
+
+- [45](https://github.com/okta/okta-jwt-verifier-js/pull/45) - freezes `njwt` version
+
 # 3.2.0
 
 ### Features
