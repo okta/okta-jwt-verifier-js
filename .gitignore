@@ -9,6 +9,7 @@ yarn-debug.log*
 yarn-error.log*
 package-lock.json
 dist
+junit.xml
 testenv
 
 # Ignore TCK-related files in all folders

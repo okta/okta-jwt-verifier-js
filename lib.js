@@ -228,21 +228,19 @@ class OktaJwtVerifier {
           return reject(err);
         }
 
-        const jwtBodyProxy = new Proxy(jwt.body, {});
-        Object.defineProperty(jwt, 'claims', {
-          enumerable: true,
-          writable: false,
-          value: jwtBodyProxy
-        });
+        const oktaJwt = {
+          header: { ...jwt.header },
+          claims: { ...jwt.body },
+          toString: () => tokenString,
+          isExpired: () => jwt.isExpired(),
+          isNotBefore: () => jwt.isNotBefore(),
+        };
 
-        njwtTokenBodyMethods.forEach(methodName => {
-          let method = jwt[methodName];
-          if (method) {
-            jwt[methodName] = method.bind({ body: jwtBodyProxy });
-          }
-        });
-        delete jwt.body;
-        resolve(jwt);
+        Object.freeze(oktaJwt.header);
+        Object.freeze(oktaJwt.body);
+        Object.freeze(oktaJwt);
+
+        resolve(oktaJwt);
       });
     });
   }

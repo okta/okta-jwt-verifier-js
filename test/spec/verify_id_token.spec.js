@@ -10,8 +10,6 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-const nock = require('nock');
-const tk = require('timekeeper');
 const constants = require('../constants')
 
 const { createToken, createVerifier, createCustomClaimsVerifier, rsaKeyPair } = require('../util');
@@ -36,7 +34,6 @@ const issuer1TokenParams = {
   REDIRECT_URI,
   NONCE
 };
-
 
 describe('Jwt Verifier - Verify ID Token', () => {
   const mockKidAsKeyFetch = (verifier) => {
@@ -364,11 +361,13 @@ describe('Jwt Verifier - Verify ID Token', () => {
   });
 
   describe('Verified JWT', function () {
+    let token;
     let jwt;
     beforeEach(async () => {
-      const token = createToken({
+      token = createToken({
         aud: '0oaoesxtxmPf08QHk0h7',
         iss: ISSUER,
+        exp: Math.floor(Date.now() / 1000)
       }, {
         kid: rsaKeyPair.public
       });
@@ -380,8 +379,16 @@ describe('Jwt Verifier - Verify ID Token', () => {
     });
 
     it('has claims accessors', () => {
+      jest.useFakeTimers();
+      expect(jwt.toString()).toBe(token);
       expect(jwt.isExpired()).toBe(false);
       expect(jwt.isNotBefore()).toBe(false);
+      jest.advanceTimersByTime((60*60*1000) + 1);
+      expect(jwt.toString()).toBe(token);
+      expect(jwt.isExpired()).toBe(true);   // ensures jwt.isExpired() returns true/false based on real timestamp
+      expect(jwt.isNotBefore()).toBe(false);
+      jest.clearAllTimers();
+      jest.useRealTimers();
     });
 
     it('has readonly \'claims\' property', () => {
@@ -389,12 +396,13 @@ describe('Jwt Verifier - Verify ID Token', () => {
       expect(jwt.claims.aud).toEqual('0oaoesxtxmPf08QHk0h7');
     });
 
-    it('tracks mutations done by claims accessors in the \'claims\' property', () => {
-      jwt.setClaim('customClaim', 'claimValue');
-      expect(jwt.claims.customClaim).toEqual('claimValue');
+    // TODO: remove this? I don't see the use case of editing a verified jwt
+    // it('tracks mutations done by claims accessors in the \'claims\' property', () => {
+    //   // jwt.setClaim('customClaim', 'claimValue');
+    //   expect(jwt.claims.customClaim).toEqual('claimValue');
 
-      jwt.setClaim('exp', (new Date() - 1) / 1000);
-      expect(jwt.isExpired()).toBe(true);
-    });
+    //   // jwt.setClaim('exp', (new Date() - 1) / 1000);
+    //   expect(jwt.isExpired()).toBe(true);
+    // });
   })
 });
