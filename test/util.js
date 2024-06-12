@@ -122,14 +122,12 @@ function getIdToken(options = {}) {
 }
 
 function createToken(claims, headers = {}) {
-  let token = new njwt.Jwt(claims)
-    .setSigningAlgorithm('RS256')
-    .setSigningKey(rsaKeyPair.private);
+  let token = njwt.create(claims, rsaKeyPair.private, 'RS256');
   
   for (const [k, v] of Object.entries(headers)) {
     token = token.setHeader(k, v);
   }
-  
+
   return token.compact();
 }
 
@@ -150,7 +148,10 @@ function createCustomClaimsVerifier(customClaims, otherClaims) {
         body: {
           ...otherClaims,
           ...customClaims
-        }
+        },
+        toString: () => 'fake',
+        isExpired: () => false,
+        isNotBefore: () => false
       })
     }
   };

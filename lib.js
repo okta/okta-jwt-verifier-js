@@ -228,21 +228,31 @@ class OktaJwtVerifier {
           return reject(err);
         }
 
+        const oktaJwt = {
+          header: { ...jwt.header },
+          toString: () => tokenString,
+        };
+
         const jwtBodyProxy = new Proxy(jwt.body, {});
-        Object.defineProperty(jwt, 'claims', {
+        Object.defineProperty(oktaJwt, 'claims', {
           enumerable: true,
           writable: false,
           value: jwtBodyProxy
         });
 
-        njwtTokenBodyMethods.forEach(methodName => {
-          let method = jwt[methodName];
-          if (method) {
-            jwt[methodName] = method.bind({ body: jwtBodyProxy });
+        njwtTokenBodyMethods.forEach(method => {
+          const fn = jwt[method];
+          if (fn) {
+            oktaJwt[method] = fn.bind({ body: jwtBodyProxy })
           }
         });
-        delete jwt.body;
-        resolve(jwt);
+
+        Object.freeze(oktaJwt.header);
+        // TODO: cannot be frozen without breaking change
+        // Object.freeze(oktaJwt.body);
+        Object.freeze(oktaJwt);
+
+        resolve(oktaJwt);
       });
     });
   }
