@@ -230,14 +230,26 @@ class OktaJwtVerifier {
 
         const oktaJwt = {
           header: { ...jwt.header },
-          claims: { ...jwt.body },
           toString: () => tokenString,
-          isExpired: () => jwt.isExpired(),
-          isNotBefore: () => jwt.isNotBefore(),
         };
 
+        const jwtBodyProxy = new Proxy(jwt.body, {});
+        Object.defineProperty(oktaJwt, 'claims', {
+          enumerable: true,
+          writable: false,
+          value: jwtBodyProxy
+        });
+
+        njwtTokenBodyMethods.forEach(method => {
+          const fn = jwt[method];
+          if (fn) {
+            oktaJwt[method] = fn.bind({ body: jwtBodyProxy })
+          }
+        });
+
         Object.freeze(oktaJwt.header);
-        Object.freeze(oktaJwt.body);
+        // TODO: cannot be frozen without breaking change
+        // Object.freeze(oktaJwt.body);
         Object.freeze(oktaJwt);
 
         resolve(oktaJwt);

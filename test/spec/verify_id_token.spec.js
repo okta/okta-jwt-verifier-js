@@ -396,13 +396,15 @@ describe('Jwt Verifier - Verify ID Token', () => {
       expect(jwt.claims.aud).toEqual('0oaoesxtxmPf08QHk0h7');
     });
 
-    // TODO: remove this? I don't see the use case of editing a verified jwt
-    // it('tracks mutations done by claims accessors in the \'claims\' property', () => {
-    //   // jwt.setClaim('customClaim', 'claimValue');
-    //   expect(jwt.claims.customClaim).toEqual('claimValue');
+    it('tracks mutations done by claims accessors in the \'claims\' property', () => {
+      jwt.setClaim('customClaim', 'claimValue');
+      expect(jwt.claims.customClaim).toEqual('claimValue');
 
-    //   // jwt.setClaim('exp', (new Date() - 1) / 1000);
-    //   expect(jwt.isExpired()).toBe(true);
-    // });
+      jwt.setClaim('exp', (new Date() - 1) / 1000);
+      expect(jwt.isExpired()).toBe(true);
+
+      jwt.setIssuer('foobar');
+      expect(jwt.claims.iss).toBe('foobar');
+    });
   })
 });
