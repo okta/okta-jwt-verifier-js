@@ -30,7 +30,7 @@ describe('jwt-verifier configuration validation', () => {
   });
 
   it('should not throw if https issuer validation is skipped', () => {
-    jest.spyOn(console, 'warn');
+    jest.spyOn(console, 'warn').mockImplementation(()=>{});   // mockImplementation to stop console.warn from actually logging
     function createInstance() {
       new OktaJwtVerifier({
         issuer: 'http://foo.com',

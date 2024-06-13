@@ -2843,10 +2843,10 @@ nice-try@^1.0.4:
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
   integrity sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
 
-njwt@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/njwt/-/njwt-2.0.0.tgz#da8b7ad995980de67b8069dad63949d2bd5df27d"
-  integrity sha512-1RcqirhCqThBEe4KO83pFg0wPBa1c9NiXNCrocD2EbZqb6ksWWDVnp/w/p0gsyUcVa05PhhaaPjs9rc/GLmdxQ==
+njwt@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/njwt/-/njwt-2.0.1.tgz#21a224c33ab1468f903210b1f45a20181adb6600"
+  integrity sha512-HwFeZsPJ1aOhIjMjqT9Qv7BOsQbkxjRVPPSdFXNOTEkfKpr9+O6OX+dSN6TxxIErSYSqrmlDR4H2zOGOpEbZLA==
   dependencies:
     "@types/node" "^15.0.1"
     ecdsa-sig-formatter "^1.0.5"

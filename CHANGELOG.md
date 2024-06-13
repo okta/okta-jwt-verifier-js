@@ -1,3 +1,15 @@
+# 3.2.2
+
+### Fixes
+
+- [46](https://github.com/okta/okta-jwt-verifier-js/pull/46) - Upgrades `njwt` version to `2.0.1` to pull in [CVE-2024-34273](https://www.cve.org/CVERecord?id=CVE-2024-34273) resolution
+
+# 3.2.1
+
+### Fixes
+
+- [45](https://github.com/okta/okta-jwt-verifier-js/pull/45) - freezes `njwt` version
+
 # 3.2.0
 
 ### Features
