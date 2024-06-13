@@ -17,9 +17,6 @@ class ConfigurationValidationError extends Error {}
 
 const findDomainURL = 'https://bit.ly/finding-okta-domain';
 const findAppCredentialsURL = 'https://bit.ly/finding-okta-app-credentials';
-const njwtTokenBodyMethods = [
-  'setClaim', 'setJti', 'setSubject', 'setIssuer', 'setIssuedAt',
-  'setExpiration', 'setNotBefore', 'isExpired', 'isNotBefore'];
 
 const assertIssuer = (issuer, testing = {}) => {
   const isHttps = new RegExp('^https://');
@@ -230,26 +227,14 @@ class OktaJwtVerifier {
 
         const oktaJwt = {
           header: { ...jwt.header },
+          claims: { ...jwt.body },
           toString: () => tokenString,
+          isExpired: () => jwt.isExpired(),
+          isNotBefore: () => jwt.isNotBefore()
         };
 
-        const jwtBodyProxy = new Proxy(jwt.body, {});
-        Object.defineProperty(oktaJwt, 'claims', {
-          enumerable: true,
-          writable: false,
-          value: jwtBodyProxy
-        });
-
-        njwtTokenBodyMethods.forEach(method => {
-          const fn = jwt[method];
-          if (fn) {
-            oktaJwt[method] = fn.bind({ body: jwtBodyProxy })
-          }
-        });
-
         Object.freeze(oktaJwt.header);
-        // TODO: cannot be frozen without breaking change
-        // Object.freeze(oktaJwt.body);
+        Object.freeze(oktaJwt.claims);
         Object.freeze(oktaJwt);
 
         resolve(oktaJwt);
