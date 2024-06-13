@@ -352,5 +352,20 @@ describe('ID token tests with api calls', () => {
     }));
   });
 
+  it('should use keyInterceptor function', () => {
+    const getKeysInterceptor = jest.fn().mockReturnValue([]);
+    const verifier = createVerifier({
+      getKeysInterceptor
+    });
+    return getIdToken(issuer1TokenParams)
+    .then(idToken => {
+      return verifier.verifyIdToken(idToken, expectedClientId, NONCE)
+      .then(jwt => {
+        expect(getKeysInterceptor).toHaveBeenCalled();
+        expect(jwt.claims.iss).toBe(ISSUER);
+      })
+    });
+  });
+
 }, LONG_TIMEOUT);
 

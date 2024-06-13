@@ -148,4 +148,19 @@ describe('jwt-verifier configuration validation', () => {
 
     expect(verifier.jwksUri).toEqual(customJwksUri);
   });
+
+  it('should configure getKeysInterceptor', () => {
+    new OktaJwtVerifier({
+      issuer: 'https://foo',
+      clientId: '123456',
+      getKeysInterceptor: () => []
+    });
+
+    new OktaJwtVerifier({
+      issuer: 'https://foo',
+      clientId: '123456',
+      getKeysInterceptor: async () => []
+    });
+  });
+
 });
