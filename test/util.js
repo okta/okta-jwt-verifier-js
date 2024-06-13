@@ -169,6 +169,7 @@ function createCustomClaimsVerifier(customClaims, otherClaims) {
 module.exports = {
   getAccessToken,
   getIdToken,
+  getKeySet,
   createToken,
   createVerifier,
   createCustomClaimsVerifier,
