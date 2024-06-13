@@ -205,6 +205,7 @@ class OktaJwtVerifier {
       // https://github.com/auth0/node-jwks-rsa/blob/master/CHANGELOG.md#request-agent-options
       // requestAgentOptions: options.requestAgentOptions,    !! DEPRECATED !!
       requestAgent: options.requestAgent,
+      getKeysInterceptor: options.getKeysInterceptor,
     });
     this.verifier = nJwt.createVerifier().setSigningAlgorithm('RS256').withKeyResolver((kid, cb) => {
       if (kid) {

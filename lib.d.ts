@@ -11,6 +11,7 @@
  */
 
 /* eslint-disable node/no-missing-import */
+import type { JSONWebKey } from 'jwks-rsa';
 import { Agent as HttpAgent } from "node:http";
 import { Agent as HttpsAgent } from "node:https";
 /* eslint-enable node/no-missing-import */
@@ -121,6 +122,12 @@ declare namespace OktaJwtVerifier {
      * Agent example: https://github.com/TooTallNate/node-https-proxy-agent
      */
      requestAgent?: HttpAgent | HttpsAgent;
+
+    /**
+     * This option is passed to the `JwksClient` constructor. Useful when wanting to load key sets from a file, env variable or external cache
+     * Read more: https://github.com/auth0/node-jwks-rsa/blob/master/EXAMPLES.md#loading-keys-from-local-file-environment-variable-or-other-externals
+     */
+    getKeysInterceptor?(): Promise<JSONWebKey>;
   }
 
   type Algorithm =

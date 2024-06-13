@@ -4,6 +4,10 @@
 
 - [#47](https://github.com/okta/okta-jwt-verifier-js/pull/47) - **BREAKING CHANGE** `verifyAccessToken` and `verifyIdToken` no longer return an `njwt.Jwt` with setters (like `setIssuer` or `setSubject`). The resulting `jwt` is now frozen to prevent manipulation
 
+### Features
+
+- [#48](https://github.com/okta/okta-jwt-verifier-js/pull/48) - feat: adds `getKeysInterceptor` option from `jwks-rsa`
+
 # 3.2.2
 
 ### Fixes

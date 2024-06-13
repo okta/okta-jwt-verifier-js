@@ -103,6 +103,16 @@ function getTokens(options = {}) {
   });
 }
 
+function getKeySet() {
+  return fetch(ISSUER + '/v1/keys')
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to get keys');
+    }
+    return response.json();
+  });
+}
+
 function getAccessToken(options = {}) {
   return getTokens({...options, RESPONSE_TYPE: 'token'}).then(({accessToken: accessToken}) => {
     if (!accessToken){
@@ -160,6 +170,7 @@ function createCustomClaimsVerifier(customClaims, otherClaims) {
 module.exports = {
   getAccessToken,
   getIdToken,
+  getKeySet,
   createToken,
   createVerifier,
   createCustomClaimsVerifier,
