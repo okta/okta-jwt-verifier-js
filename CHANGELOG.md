@@ -1,14 +1,20 @@
+# 4.0.0
+
+### Breaking
+
+- [#47](https://github.com/okta/okta-jwt-verifier-js/pull/47) - **BREAKING CHANGE** `verifyAccessToken` and `verifyIdToken` no longer return an `njwt.Jwt` with setters (like `setIssuer` or `setSubject`). The resulting `jwt` is now frozen to prevent manipulation
+
 # 3.2.2
 
 ### Fixes
 
-- [46](https://github.com/okta/okta-jwt-verifier-js/pull/46) - Upgrades `njwt` version to `2.0.1` to pull in [CVE-2024-34273](https://www.cve.org/CVERecord?id=CVE-2024-34273) resolution
+- [#46](https://github.com/okta/okta-jwt-verifier-js/pull/46) - Upgrades `njwt` version to `2.0.1` to pull in [CVE-2024-34273](https://www.cve.org/CVERecord?id=CVE-2024-34273) resolution
 
 # 3.2.1
 
 ### Fixes
 
-- [45](https://github.com/okta/okta-jwt-verifier-js/pull/45) - freezes `njwt` version
+- [#45](https://github.com/okta/okta-jwt-verifier-js/pull/45) - freezes `njwt` version
 
 # 3.2.0
 
