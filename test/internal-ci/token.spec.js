@@ -19,7 +19,13 @@ const constants = require('../constants')
 const LONG_TIMEOUT = 15000;
 const LONG_TIMEOUT_PDV = 50000;
 
-const { getAccessToken, getIdToken, createVerifier, createToken} = require('../util');
+const {
+  getAccessToken,
+  getIdToken,
+  createVerifier,
+  createToken,
+  getKeySet
+} = require('../util');
 
 // These need to be exported in the environment, from a working Okta org
 const ISSUER = constants.ISSUER;
@@ -353,6 +359,25 @@ describe('ID token tests with api calls', () => {
   });
 
   it('should use keyInterceptor function', () => {
+    const getKeysInterceptor = jest.fn();
+    const verifier = createVerifier({
+      getKeysInterceptor
+    });
+    return getKeySet()
+    .then(res => {
+      getKeysInterceptor.mockReturnValue(res.keys);
+      return getIdToken(issuer1TokenParams);
+    })
+    .then(idToken => {
+      return verifier.verifyIdToken(idToken, expectedClientId, NONCE)
+      .then(jwt => {
+        expect(getKeysInterceptor).toHaveBeenCalled();
+        expect(jwt.claims.iss).toBe(ISSUER);
+      })
+    });
+  });
+
+  it('should use keyInterceptor function, but fallback to jwks', () => {
     const getKeysInterceptor = jest.fn().mockReturnValue([]);
     const verifier = createVerifier({
       getKeysInterceptor

@@ -103,6 +103,15 @@ function getTokens(options = {}) {
   });
 }
 
+function getKeySet() {
+  return fetch(ISSUER + '/v1/keys')
+  .then(response => {
+    if (response.ok) {
+      return response.json();
+    }
+  });
+}
+
 function getAccessToken(options = {}) {
   return getTokens({...options, RESPONSE_TYPE: 'token'}).then(({accessToken: accessToken}) => {
     if (!accessToken){
