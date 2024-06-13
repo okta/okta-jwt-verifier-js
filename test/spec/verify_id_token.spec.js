@@ -394,17 +394,20 @@ describe('Jwt Verifier - Verify ID Token', () => {
     it('has readonly \'claims\' property', () => {
       jwt.claims = { aud: 'defaultAPI' };
       expect(jwt.claims.aud).toEqual('0oaoesxtxmPf08QHk0h7');
+      expect(Object.isFrozen(jwt.header)).toBe(true);
+      expect(Object.isFrozen(jwt.claims)).toBe(true);
+      expect(Object.isFrozen(jwt)).toBe(true);
     });
 
-    it('tracks mutations done by claims accessors in the \'claims\' property', () => {
-      jwt.setClaim('customClaim', 'claimValue');
-      expect(jwt.claims.customClaim).toEqual('claimValue');
-
-      jwt.setClaim('exp', (new Date() - 1) / 1000);
-      expect(jwt.isExpired()).toBe(true);
-
-      jwt.setIssuer('foobar');
-      expect(jwt.claims.iss).toBe('foobar');
+    it('should not allow manipulation of verified jwt', () => {
+      expect(() => jwt.setClaim('customClaim', 'claimValue')).toThrow();
+      expect(() => jwt.setClaim('exp', (new Date() - 1) / 1000)).toThrow();
+      expect(() => jwt.setJti('foobar')).toThrow();
+      expect(() => jwt.setSubject('foobar')).toThrow();
+      expect(() => jwt.setIssuer('foobar')).toThrow();
+      expect(() => jwt.setIssuedAt('foobar')).toThrow();
+      expect(() => jwt.setExpiration('foobar')).toThrow();
+      expect(() => jwt.setNotBefore('foobar')).toThrow();
     });
   })
 });

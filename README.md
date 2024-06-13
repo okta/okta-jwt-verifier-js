@@ -130,13 +130,6 @@ The expected client ID passed to `verifyIdToken()` is required. Expected nonce v
     at_hash: 'at_hash'
   },
   toString: () => 'base64-encoded token',
-  setClaim: (claim, value) => token,
-  setJti: (jti) => token,
-  setSubject: (sub) => token,
-  setIssuer: (iss) => token,
-  setIssuedAt: (iat) => token,
-  setExpiration: (exp) => token,
-  setNotBefore: (nbf) => token,
   isExpired: () => Boolean,
   isNotBefore: () => Boolean,
 ```
