@@ -106,9 +106,10 @@ function getTokens(options = {}) {
 function getKeySet() {
   return fetch(ISSUER + '/v1/keys')
   .then(response => {
-    if (response.ok) {
-      return response.json();
+    if (!response.ok) {
+      throw new Error('Failed to get keys');
     }
+    return response.json();
   });
 }
 
