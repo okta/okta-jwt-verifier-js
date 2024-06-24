@@ -5,7 +5,8 @@
   },
   "ignorePatterns": [
     "test/**/*",
-    "target/**/*"
+    "target/**/*",
+    "lib.d.ts"
   ],
   "extends": [
     "eslint:recommended",
