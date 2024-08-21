@@ -9,6 +9,20 @@ This library verifies Okta access and ID tokens by fetching the public keys from
 
 Using Express?  Our [Express Resource Server Example](https://github.com/okta/samples-nodejs-express-4/tree/master/resource-server) will show you how to use this library in your Express application.
 
+## Release Status
+
+:heavy_check_mark: The current stable major version series is: `4.x`
+
+| Version   | Status                           |
+| -------   | -------------------------------- |
+| `4.x`     | :heavy_check_mark: Stable        |
+| `3.x`     | :warning: Retiring on 2025-01-31 |
+| `2.x`     | :x: Retired                      |
+| `1.x`     | :x: Retired                      |
+| `0.x`     | :x: Retired                      |
+
+The latest release can always be found on the [releases page][github-releases].
+
 ## Access Tokens
 
 This library verifies Okta access tokens (issued by [Okta Custom Authorization servers](https://developer.okta.com/docs/concepts/auth-servers/#custom-authorization-server)) by fetching the public keys from the JWKS endpoint of the authorization server. If the access token is valid it will be converted to a JSON object and returned to your code. 
