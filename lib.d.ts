@@ -127,7 +127,7 @@ declare namespace OktaJwtVerifier {
      * This option is passed to the `JwksClient` constructor. Useful when wanting to load key sets from a file, env variable or external cache
      * Read more: https://github.com/auth0/node-jwks-rsa/blob/master/EXAMPLES.md#loading-keys-from-local-file-environment-variable-or-other-externals
      */
-    getKeysInterceptor?(): Promise<JSONWebKey>;
+    getKeysInterceptor?(): Promise<JSONWebKey[]>;
   }
 
   type Algorithm =
