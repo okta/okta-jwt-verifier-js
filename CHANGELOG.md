@@ -1,3 +1,8 @@
+# 4.0.1
+
+- [#53](https://github.com/okta/okta-jwt-verifier-js/pull/53) - merges https://github.com/okta/okta-jwt-verifier-js/pull/52
+   - [#52](https://github.com/okta/okta-jwt-verifier-js/pull/52) -  fix: updates `jwks-rsa` signature type
+
 # 4.0.0
 
 ### Breaking
