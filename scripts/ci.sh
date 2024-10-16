@@ -8,7 +8,7 @@ export TEST_RESULT_FILE_DIR="${REPO}/reports/ci"
 export ISSUER=https://sdk-test-ok14.okta.com/oauth2/default
 export CLIENT_ID=0oa5dztAOmaWJ09Dm694
 export USERNAME=alex@acme.com
-get_terminus_secret "/" PASSWORD PASSWORD
+get_terminus_secret "/" password PASSWORD
 
 export CI=true
 export DBUS_SESSION_BUS_ADDRESS=/dev/null
