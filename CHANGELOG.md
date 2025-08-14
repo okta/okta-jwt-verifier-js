@@ -1,3 +1,8 @@
+# 4.0.2
+
+- [#60](https://github.com/okta/okta-jwt-verifier-js/pull/60) - merges https://github.com/okta/okta-jwt-verifier-js/pull/56
+  - [#52](https://github.com/okta/okta-jwt-verifier-js/pull/56) -  fix: type correction
+
 # 4.0.1
 
 - [#53](https://github.com/okta/okta-jwt-verifier-js/pull/53) - merges https://github.com/okta/okta-jwt-verifier-js/pull/52
