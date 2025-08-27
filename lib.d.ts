@@ -49,6 +49,10 @@ declare class OktaJwtVerifier {
 }
 
 declare namespace OktaJwtVerifier {
+  interface TestingOptions {
+    disableHttpsCheck: boolean;
+  }
+
   interface VerifierOptions {
     /**
      * Issuer/Authorization server URL
@@ -128,6 +132,8 @@ declare namespace OktaJwtVerifier {
      * Read more: https://github.com/auth0/node-jwks-rsa/blob/master/EXAMPLES.md#loading-keys-from-local-file-environment-variable-or-other-externals
      */
     getKeysInterceptor?(): Promise<JSONWebKey[]>;
+
+    testing?: TestingOptions;
   }
 
   type Algorithm =
