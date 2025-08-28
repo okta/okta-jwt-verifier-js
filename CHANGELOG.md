@@ -1,12 +1,15 @@
 # 4.0.2
 
-- [#60](https://github.com/okta/okta-jwt-verifier-js/pull/60) - merges https://github.com/okta/okta-jwt-verifier-js/pull/56
-  - [#52](https://github.com/okta/okta-jwt-verifier-js/pull/56) -  fix: type correction
+- [#58](https://github.com/okta/okta-jwt-verifier-js/pull/56) - fix(deps): bump `jwks-rsa` to `^3.2.0` to consume patched `jose`
+  - merged via [#61](https://github.com/okta/okta-jwt-verifier-js/pull/61)
+
+- [#52](https://github.com/okta/okta-jwt-verifier-js/pull/56) - fix: type correction
+  - merged via [#60](https://github.com/okta/okta-jwt-verifier-js/pull/60)
 
 # 4.0.1
 
-- [#53](https://github.com/okta/okta-jwt-verifier-js/pull/53) - merges https://github.com/okta/okta-jwt-verifier-js/pull/52
-   - [#52](https://github.com/okta/okta-jwt-verifier-js/pull/52) -  fix: updates `jwks-rsa` signature type
+- [#52](https://github.com/okta/okta-jwt-verifier-js/pull/52) - fix: updates `jwks-rsa` signature type
+  - merged via [#53](https://github.com/okta/okta-jwt-verifier-js/pull/53)
 
 # 4.0.0
 
