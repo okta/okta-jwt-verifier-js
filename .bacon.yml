@@ -5,25 +5,33 @@ test_suites:
     timeout: '60'
     script_name: lint
     criteria: MERGE
-    queue_name: small
+    queue_name: al2023
   - name: unit
     script_path: '../okta-jwt-verifier-js/scripts'
     sort_order: '2'
     timeout: '60'
     script_name: unit
     criteria: MERGE
-    queue_name: small
+    queue_name: al2023
   - name: ci
     script_path: '../okta-jwt-verifier-js/scripts'
     sort_order: '3'
     timeout: '60'
     script_name: ci
     criteria: MERGE
-    queue_name: small
+    queue_name: al2023
   - name: publish
     script_path: '../okta-jwt-verifier-js/scripts'
     sort_order: '4'
     timeout: '60'
     script_name: publish
     criteria: MERGE
-    queue_name: small
+    queue_name: al2023
+  - name: snyk
+    script_path: '../okta-jwt-verifier-js/scripts'
+    script_name: snyk
+    sort_order: '5'
+    timeout: '200'
+    criteria: MAINLINE
+    queue_name: al2023
+    trigger: AUTO
