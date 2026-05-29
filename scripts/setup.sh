@@ -2,7 +2,7 @@
 
 # Install required node version
 export NVM_DIR="${HOME}/.nvm"
-if ! setup_service node v14.18.2 &> /dev/null; then
+if ! setup_service node v16.18.1 &> /dev/null; then
   echo "Failed to install node"
   exit ${FAILED_SETUP}
 fi
