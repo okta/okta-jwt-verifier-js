@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "types": ["node"],
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "target": "es2022",
+    "lib": ["es2023", "dom"],
+    "strict": true,
+    "noImplicitAny": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "rootDir": "./src",
+    "outDir": "./dist/types",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "resolveJsonModule": true
+  },
+  "include": ["./src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

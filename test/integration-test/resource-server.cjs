@@ -11,7 +11,7 @@
  */
 
 const express = require('express');
-const OktaJwtVerifier = require('../../lib');
+const OktaJwtVerifier = require('../../dist/cjs/index.cjs');
 var cors = require('cors');
 
 const MOCK_ISSUER='http://localhost:9090/oauth2/default';

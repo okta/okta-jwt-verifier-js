@@ -4,9 +4,10 @@
     "node": true
   },
   "ignorePatterns": [
+    "dist/**/*",
     "test/**/*",
     "target/**/*",
-    "lib.d.ts"
+    "reports/**/*"
   ],
   "extends": [
     "eslint:recommended",
@@ -16,7 +17,7 @@
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 12,
+    "ecmaVersion": 2022,
     "sourceType": "module"
   },
   "plugins": [
@@ -24,13 +25,53 @@
     "@typescript-eslint"
   ],
   "rules": {
-    "max-len": ["error", { "code": 120, "comments": 120 }],
-    "max-classes-per-file": ["error", 3],
+    "max-len": [
+      "error",
+      {
+        "code": 120,
+        "comments": 120
+      }
+    ],
+    "max-classes-per-file": [
+      "error",
+      3
+    ],
     "@typescript-eslint/no-var-requires": 0,
-    "node/no-unsupported-features/es-syntax": ["error", { "ignores": ["modules"] }],
+    "node/no-unsupported-features/es-syntax": [
+      "error",
+      {
+        "ignores": [
+          "modules"
+        ]
+      }
+    ],
     "@typescript-eslint/no-unused-vars": 0,
-    "node/no-unpublished-require": ["error", {
-      "allowModules": ["globby", "shelljs", "chalk"]
-    }]
+    "node/no-unpublished-require": [
+      "error",
+      {
+        "allowModules": [
+          "shelljs",
+          "chalk"
+        ]
+      }
+    ],
+    "node/no-missing-import": [
+      "error",
+      {
+        "tryExtensions": [
+          ".ts",
+          ".js"
+        ]
+      }
+    ],
+    "node/no-unpublished-import": [
+      "error",
+      {
+        "allowModules": [
+          "undici"
+        ]
+      }
+    ],
+    "node/no-missing-require": "off"
   }
 }

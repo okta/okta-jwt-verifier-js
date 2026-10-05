@@ -11,11 +11,12 @@ Using Express?  Our [Express Resource Server Example](https://github.com/okta/sa
 
 ## Release Status
 
-:heavy_check_mark: The current stable major version series is: `4.x`
+:heavy_check_mark: The current stable major version series is: `5.x`
 
 | Version   | Status                           |
 | -------   | -------------------------------- |
-| `4.x`     | :heavy_check_mark: Stable        |
+| `5.x`     | :heavy_check_mark: Stable        |
+| `4.x`     | :warning: Maintenance            |
 | `3.x`     | :warning: Retiring on 2025-01-31 |
 | `2.x`     | :x: Retired                      |
 | `1.x`     | :x: Retired                      |
@@ -56,6 +57,10 @@ For any ID token to be valid, the following are asserted:
 
 To learn more about verification cases and Okta's tokens please read [Validate ID Tokens](https://developer.okta.com/docs/guides/validate-id-tokens/overview/). 
 
+## Requirements
+
+Node.js `>=22`. This library uses the global `fetch` and WebCrypto; it is not intended for browsers.
+
 ## Upgrading
 
 For information on how to upgrade between versions of the library, see UPGRADING.md
@@ -69,7 +74,10 @@ npm install --save @okta/jwt-verifier
 Create a verifier instance, bound to the issuer (authorization server URL):
 
 ```javascript
-const OktaJwtVerifier = require('@okta/jwt-verifier');
+// ESM
+import OktaJwtVerifier from '@okta/jwt-verifier';
+// or CommonJS
+// const OktaJwtVerifier = require('@okta/jwt-verifier');
 
 const oktaJwtVerifier = new OktaJwtVerifier({
   issuer: 'https://{yourOktaDomain}/oauth2/default' // required
@@ -103,6 +111,8 @@ oktaJwtVerifier.verifyAccessToken(accessTokenString, [ 'api://special', 'api://d
 ```
 
 ### Verify ID tokens
+
+> :warning: **ID tokens are not access tokens.** They are intended for the client application that initiated authentication, and must not be used to authorize requests to a resource server. If you are protecting an API, use `verifyAccessToken()`. Use `verifyIdToken()` only in authentication flows where you hold the `clientId` and (if sent) the `nonce` of the original request.
 
 ```javascript
 oktaJwtVerifier.verifyIdToken(idTokenString, expectedClientId, expectedNonce)
@@ -144,8 +154,7 @@ The expected client ID passed to `verifyIdToken()` is required. Expected nonce v
     at_hash: 'at_hash'
   },
   toString: () => 'base64-encoded token',
-  isExpired: () => Boolean,
-  isNotBefore: () => Boolean,
+  rawValue: 'base64-encoded token',
 ```
 
 ```javascript
@@ -235,20 +244,59 @@ const verifier = new OktaJwtVerifier({
 });
 ```
 
-## Caching & Rate Limiting
+## Caching
 
-* By default, found keys are cached by key ID for one hour. This can be configured with the `cacheMaxAge` option for cache entries.
-* If a key ID is not found in the cache, the JWKs endpoint will be requested. To prevent a DoS if many not-found keys are requested, a rate limit of 10 JWKs requests per minute is enforced. This is configurable with the `jwksRequestsPerMinute` option.
+The JWKS document is cached in memory, per verifier instance, for one hour. If a token's `kid` is not found in the cached key set, the document is re-fetched once (to pick up key rotation), at most once every 30 seconds, so unknown `kid`s cannot be used to flood your authorization server. Concurrent requests share a single in-flight fetch.
 
-Here is a configuration example that shows the default values:
+Create one verifier instance and reuse it, rather than creating one per request.
+
+## HTTP configuration
+
+JWKS requests use the global `fetch`. Two options customize how requests are made:
+
+* `fetchImpl` - a custom `fetch` implementation (logging wrappers, test doubles, etc.)
+* `dispatcher` - an [undici `Dispatcher`](https://undici.nodejs.org/#/docs/api/Dispatcher) for proxies, custom TLS, or connection pooling. It is passed to `fetch` as `fetch(url, { dispatcher })`. If `fetchImpl` is also set, it is called as `fetchImpl(url, { dispatcher })` and is responsible for honoring the `dispatcher`.
+
+`dispatcher` requires the `undici` package, which is an optional peer dependency (`npm install undici`). Node's built-in `fetch` bundles its own copy of undici, so use an `undici` major version compatible with your Node.js version.
 
 ```javascript
-// All values are default files
-const oktaJwtVerifier = new OktaJwtVerifier({
+import { ProxyAgent } from 'undici';
+
+const verifier = new OktaJwtVerifier({
   issuer: 'https://{yourOktaDomain}/oauth2/default',
-  clientId: '{clientId}',
-  cacheMaxAge: 60 * 60 * 1000, // 1 hour
-  jwksRequestsPerMinute: 10
+  dispatcher: new ProxyAgent('http://my-proxy:8080')
+});
+```
+
+```javascript
+import { Agent } from 'undici';
+
+const verifier = new OktaJwtVerifier({
+  issuer: 'https://{yourOktaDomain}/oauth2/default',
+  dispatcher: new Agent({ connect: { ca: myCustomCa } })
+});
+```
+
+```javascript
+const verifier = new OktaJwtVerifier({
+  issuer: 'https://{yourOktaDomain}/oauth2/default',
+  fetchImpl: (url, init) => {
+    console.log('fetching', url);
+    return fetch(url, init);
+  }
+});
+```
+
+### Loading keys yourself
+
+`getKeysInterceptor` replaces the JWKS request, for example to load keys from a local file. If it returns an empty array, the JWKS document is fetched as usual.
+
+```javascript
+import { readFile } from 'node:fs/promises';
+
+const verifier = new OktaJwtVerifier({
+  issuer: 'https://{yourOktaDomain}/oauth2/default',
+  getKeysInterceptor: async () => JSON.parse(await readFile('./jwks.json', 'utf8')).keys
 });
 ```
 
