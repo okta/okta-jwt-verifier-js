@@ -1,21 +1,19 @@
 {
   "name": "@okta/jwt-verifier",
   "private": true,
-  "version": "4.1.0",
+  "version": "5.0.0",
   "description": "Easily validate Okta access tokens",
   "repository": "https://github.com/okta/okta-jwt-verifier-js",
   "homepage": "https://github.com/okta/okta-jwt-verifier-js",
-  "main": "lib.js",
-  "types": "lib.d.ts",
+  "main": "dist/cjs/index.cjs",
+  "types": "dist/types/index.d.ts",
   "scripts": {
-    "build": "node build-scripts/build.js",
-    "banners": "node build-scripts/maintain-banners.js",
-    "prepare": "yarn build",
+    "build": "rm -rf dist && rollup -c && tsc && node build-scripts/build.cjs",
     "test": "yarn test:unit && yarn test:integration && yarn lint",
     "test:integration": "../../scripts/tck.sh",
-    "test:unit": "JEST_JUNIT_OUTPUT_FILE=./reports/unit/results.xml jest --runInBand test/spec",
-    "test:ci": "JEST_JUNIT_OUTPUT_FILE=./reports/ci/results.xml jest test/internal-ci",
-    "lint": "eslint . --ext .js --ext .ts && tsd"
+    "test:unit": "JEST_JUNIT_OUTPUT_FILE=./reports/unit/results.xml NODE_OPTIONS=--experimental-vm-modules jest --runInBand",
+    "test:ci": "JEST_JUNIT_OUTPUT_FILE=./reports/ci/results.xml NODE_OPTIONS=--experimental-vm-modules jest --testMatch '**/test/internal-ci/**/*.ts'",
+    "lint": "eslint . --ext .js --ext .ts && tsc --noEmit"
   },
   "keywords": [
     "okta",
@@ -26,19 +24,11 @@
     "jwt"
   ],
   "engines": {
-    "node": ">=14"
-  },
-  "jest": {
-    "reporters": [
-      "default",
-      "jest-junit"
-    ],
-    "testEnvironment": "node"
+    "node": ">=22"
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "jwks-rsa": "^3.2.0",
-    "njwt": "^2.0.1"
+    "@okta/auth-foundation": "0.9.0"
   },
   "resolutions": {
     "minimist": "^1.2.6",
@@ -46,6 +36,11 @@
     "glob-parent": "^6.0.2"
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-typescript": "^12.1.4",
+    "@types/jest": "^29.4.4",
+    "@types/node": "^22.9.0",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.51.0",
     "chalk": "^4.1.2",
@@ -58,23 +53,30 @@
     "globby": "^11.0.4",
     "jest": "29.5.0",
     "jest-junit": "^13.0.0",
-    "nock": "^13.2.9",
-    "node-fetch": "^2.6.7",
+    "rollup": "^4.52.4",
+    "rollup-plugin-cleanup": "^3.2.1",
     "shelljs": "^0.8.5",
-    "timekeeper": "^1.0.0",
-    "tsd": "^0.19.1",
-    "typescript": "^4.1.5"
+    "ts-jest": "^29.4.2",
+    "tslib": "^2.8.1",
+    "typescript": "^5.9.2",
+    "undici": "^8.11.2"
   },
-  "tsd": {
-    "directory": "test/types",
-    "compilerOptions": {
-      "skipLibCheck": true,
-      "esModuleInterop": true,
-      "paths": {
-        "@okta/jwt-verifier": [
-          "."
-        ]
-      }
+  "type": "module",
+  "module": "dist/esm/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "peerDependencies": {
+    "undici": ">=6"
+  },
+  "peerDependenciesMeta": {
+    "undici": {
+      "optional": true
     }
   }
 }

@@ -10,6 +10,4 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-const Config = require('./.oidc.config.js');
-
-module.exports = Config({ port: 8080 }).spaConstants;
+export class ConfigurationValidationError extends Error {}

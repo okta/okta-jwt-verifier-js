@@ -28,4 +28,4 @@ scenarios:
     env:
       NODE_EXTRA_CA_CERTS: ./tck-keystore.pem
     args:
-    - test/integration-test/resource-server.js
+    - test/integration-test/resource-server.cjs

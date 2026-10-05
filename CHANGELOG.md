@@ -1,3 +1,20 @@
+# 5.0.0
+
+### Breaking
+
+- Requires Node.js `>=22`
+- Replaces `njwt` and `jwks-rsa` with `@okta/auth-foundation`. `verifyAccessToken` and `verifyIdToken` resolve with an `@okta/auth-foundation` `JWT`
+- Removes `requestAgent` (and the previously deprecated `requestAgentOptions`). Use `dispatcher` or `fetchImpl`
+- Removes `cacheMaxAge` and `jwksRequestsPerMinute`. JWKS are cached in memory, with a refresh on unknown `kid`
+- `verifyIdToken` validates with the `@okta/auth-foundation` `DefaultIDTokenValidator`
+
+### Features
+
+- adds `fetchImpl` and `dispatcher` (undici, optional peer dependency) options
+- ships ESM and CommonJS builds; source converted to TypeScript
+
+See UPGRADING.md.
+
 # 4.0.2
 
 - [#58](https://github.com/okta/okta-jwt-verifier-js/pull/56) - fix(deps): bump `jwks-rsa` to `^3.2.0` to consume patched `jose`
