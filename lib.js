@@ -220,6 +220,13 @@ class OktaJwtVerifier {
 
   async verifyAsPromise(tokenString) {
     return new Promise((resolve, reject) => {
+      if (typeof tokenString === 'string') {
+        const segments = tokenString.split('.');
+        if (segments.length === 2 || (segments.length === 3 && !segments[2])) {
+          return reject(new Error('Signature verification failed'));
+        }
+      }
+
       // Convert to a promise
       this.verifier.verify(tokenString, (err, jwt) => {
         if (err) {
