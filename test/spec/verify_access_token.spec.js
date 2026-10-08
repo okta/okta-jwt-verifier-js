@@ -45,6 +45,24 @@ describe('Jwt Verifier - Verify Access Token', () => {
         });
     });
 
+    it('fails without throwing if the signature segment is removed', async () => {
+      const token = createToken({
+        aud: 'http://myapp.com/',
+        iss: ISSUER,
+      }, {
+        kid: rsaKeyPair.public
+      });
+      const [header, body] = token.split('.');
+
+      const verifier = createVerifier();
+      mockKidAsKeyFetch(verifier);
+
+      await expect(verifier.verifyAccessToken(`${header}.${body}`, 'http://myapp.com/'))
+        .rejects.toThrow('Signature verification failed');
+      await expect(verifier.verifyAccessToken(`${header}.${body}.`, 'http://myapp.com/'))
+        .rejects.toThrow('Signature verification failed');
+    });
+
     it('passes if the signature is valid', () => {
       const token = createToken({
         aud: 'http://myapp.com/',
